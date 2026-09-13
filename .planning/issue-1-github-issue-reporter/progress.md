@@ -18,3 +18,7 @@
 - Candidate package installed on the isolated MiniPC web profile. DSH loaded
   @goodandready/dsh-issue-reporter as an active plugin and exposed the
   client bundle reference.
+- Final candidate from commit 11b9efb passed the same MiniPC smoke suite:
+  status 200 with a browser cookie, unauthenticated 401, wrong method 405,
+  cross-site 403, draft and duplicate routes 200, and create guard 400.
+- Checked package and candidate artifact were removed; only permanent lanmode
