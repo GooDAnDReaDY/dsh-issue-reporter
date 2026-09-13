@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {
   buildPluginCatalog,
+  pluginCategory,
   composeIssueDraft,
   createDeviceFlowState,
   explicitConfirmation,
@@ -40,9 +41,16 @@ test('builds supported and unsupported catalog rows from inventory and metadata'
     },
   })
   assert.equal(catalog[0].supported, true)
+  assert.equal(catalog[0].category, 'third-party')
   assert.equal(catalog[0].repository.fullName, 'acme/widget')
   assert.equal(catalog[1].supported, false)
   assert.equal(catalog[1].enabled, false)
+})
+
+test('categorizes native and third-party plugin packages', () => {
+  assert.equal(pluginCategory('@deepseek-ai/dsh-base'), 'native')
+  assert.equal(pluginCategory('@goodandready/dsh-issue-reporter'), 'third-party')
+  assert.equal(pluginCategory('dsh-plugins-store'), 'third-party')
 })
 
 test('redacts credentials, private paths, urls and email addresses', () => {
