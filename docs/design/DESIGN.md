@@ -10,13 +10,13 @@ The plugin turns a discovered DSH plugin defect into a reviewable GitHub issue d
 - GitHub authorization: show a short explanation and one "Sign in with GitHub" action. Installation-only values (public Device Flow client id, credential reference and API base URL) stay out of the normal user form.
 - Report editor: title, observed behavior, reproduction, expected behavior, optional DSH/plugin context, redaction summary, duplicate search, preview, explicit create action, and prefilled-link fallback.
 
-The card has one top-level open/report action; the collapsed state does not repeat that action inside the body. Every surface has loading, empty, success, error, disabled, and confirmation states. The create action is disabled until a supported repository and valid draft exist.
+The card has one top-level open/report action; the collapsed state does not repeat that action inside the body. Changed in the post-issue-3 UX follow-up: the whole card header row opens and closes the card, and each supported plugin row opens its report editor, so neither action is represented by a separate trailing button. Every surface has loading, empty, success, error, disabled, and confirmation states. The create action is disabled until a supported repository and valid draft exist.
 
 ## Data flow
 
 1. The browser reads the point-in-time composition through ctx.remote.pluginInventory.list().
 2. The host enriches module names from package metadata, categorizes package names, and returns only validated GitHub repository targets.
-3. Device Flow runs against GitHub without a client secret. The host stores returned OAuth material in DSH Credentials under the installation-configured reference.
+3. Device Flow runs against GitHub without a client secret: code and token requests use the GitHub web OAuth host (github.com), while repository and user API calls use the configured REST API host (api.github.com by default). The host stores returned OAuth material in DSH Credentials under the installation-configured reference.
 4. Draft text is redacted and composed locally/host-side. Duplicate search is read-only. Issue creation is a confirmed POST to GitHub REST.
 
 ## Trust boundaries

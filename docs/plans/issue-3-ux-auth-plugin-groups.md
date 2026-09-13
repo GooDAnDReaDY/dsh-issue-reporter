@@ -18,3 +18,10 @@
 - A missing installation client id produces a clear unavailable state.
 - Existing report, redaction, duplicate and confirmation behavior remains intact.
 - Unit, static and isolated MiniPC checks pass before any publication or production replacement.
+
+## Post-acceptance follow-up
+
+- The collapsed reporter card opens and closes when its full header row is clicked; no separate top-level report/close button is rendered.
+- A supported installed plugin is selected by clicking its full inventory row; no trailing Report a bug button is rendered.
+- GitHub Device Flow requests use github.com/login/...; GitHub REST calls continue to use the configured API base URL.
+- The Device Flow tests cover both the code request and authorization polling host.
