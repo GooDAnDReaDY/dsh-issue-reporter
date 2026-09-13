@@ -7,3 +7,5 @@
   acceptance criteria.
 - Canonical checkout and branch feat/issue-1-github-issue-reporter created from fresh origin/main.
 - Implementation worktree is the only writable project location.
+
+- Added a live settings watcher so host routes use the current UI configuration.
