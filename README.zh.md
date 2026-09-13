@@ -13,7 +13,7 @@
 
 报告器遵循 DSH 原生设置交互：点击报告器的整行标题即可展开或折叠，然后点击受支持插件的整行即可打开报告编辑器。两种操作都不再使用右侧单独的按钮。
 
-必须先在 GitHub App 注册设置中启用 Device Flow。插件从 github.com 请求临时设备代码和 OAuth token，并仅使用 api.github.com 执行已认证的 GitHub API 操作。如果登录操作返回 404 Not Found，通常表示仍在运行把 OAuth 请求发送到 REST API 域名的旧版本。
+必须先在 GitHub App 注册设置中启用 Device Flow。插件从 github.com 请求临时设备代码和 OAuth token；Device Flow 参数按 GitHub API 要求通过 query 参数传递；并仅使用 api.github.com 执行已认证的 GitHub API 操作。如果登录操作返回 404 Not Found，通常表示仍在运行把 OAuth 请求发送到 REST API 域名的旧版本。
 
 ## 文档
 

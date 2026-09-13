@@ -52,9 +52,11 @@ test('uses the GitHub web host for Device Flow while keeping REST API configurab
     },
   })
   await client.deviceCode('public-client-id')
-  assert.equal(new URL(calls[0].url).origin, 'https://github.com')
-  assert.equal(new URL(calls[0].url).pathname, '/login/device/code')
-  assert.deepEqual(JSON.parse(calls[0].options.body), { client_id: 'public-client-id' })
+  const url = new URL(calls[0].url)
+  assert.equal(url.origin, 'https://github.com')
+  assert.equal(url.pathname, '/login/device/code')
+  assert.equal(url.searchParams.get('client_id'), 'public-client-id')
+  assert.equal(calls[0].options.body, undefined)
 })
 
 test('uses the OAuth host for Device Flow polling', async () => {
@@ -67,8 +69,12 @@ test('uses the OAuth host for Device Flow polling', async () => {
     },
   })
   await client.accessToken('public-client-id', 'device-code')
-  assert.equal(new URL(calledUrl).origin, 'https://github.com')
-  assert.equal(new URL(calledUrl).pathname, '/login/oauth/access_token')
+  const url = new URL(calledUrl)
+  assert.equal(url.origin, 'https://github.com')
+  assert.equal(url.pathname, '/login/oauth/access_token')
+  assert.equal(url.searchParams.get('client_id'), 'public-client-id')
+  assert.equal(url.searchParams.get('device_code'), 'device-code')
+  assert.equal(url.searchParams.get('grant_type'), 'urn:ietf:params:oauth:grant-type:device_code')
 })
 
 test('surfaces GitHub API failures as typed errors', async () => {

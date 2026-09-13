@@ -13,7 +13,7 @@ Without a configured GitHub App client id, the plugin explains that sign-in is u
 
 The reporter follows the native DSH settings interaction: click the full reporter header row to expand or collapse it, then click a supported plugin's full row to open its report editor. There is no separate trailing action button for either operation.
 
-GitHub Device Flow must be enabled in the GitHub App registration. The plugin requests the temporary device code and OAuth token from github.com; it uses api.github.com only for authenticated GitHub API operations. A 404 Not Found from the sign-in action indicates an outdated build that sends the OAuth request to the REST API host.
+GitHub Device Flow must be enabled in the GitHub App registration. The plugin requests the temporary device code and OAuth token from github.com; Device Flow parameters are sent as GitHub API query parameters; it uses api.github.com only for authenticated GitHub API operations. A 404 Not Found from the sign-in action indicates an outdated build that sends the OAuth request to the REST API host.
 
 ## Documentation
 
