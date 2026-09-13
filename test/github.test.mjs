@@ -42,6 +42,35 @@ test('creates issues only with the given safe payload', async () => {
   assert.deepEqual(JSON.parse(call.options.body), { title: 'Safe', body: 'Body' })
 })
 
+test('uses the GitHub web host for Device Flow while keeping REST API configurable', async () => {
+  const calls = []
+  const client = createGitHubClient({
+    baseUrl: 'https://api.github.com',
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options })
+      return response(200, { device_code: 'device', user_code: 'ABCD-EFGH', verification_uri: 'https://github.com/login/device' })
+    },
+  })
+  await client.deviceCode('public-client-id')
+  assert.equal(new URL(calls[0].url).origin, 'https://github.com')
+  assert.equal(new URL(calls[0].url).pathname, '/login/device/code')
+  assert.deepEqual(JSON.parse(calls[0].options.body), { client_id: 'public-client-id' })
+})
+
+test('uses the OAuth host for Device Flow polling', async () => {
+  let calledUrl
+  const client = createGitHubClient({
+    baseUrl: 'https://api.github.com',
+    fetchImpl: async (url) => {
+      calledUrl = url
+      return response(200, { error: 'authorization_pending' })
+    },
+  })
+  await client.accessToken('public-client-id', 'device-code')
+  assert.equal(new URL(calledUrl).origin, 'https://github.com')
+  assert.equal(new URL(calledUrl).pathname, '/login/oauth/access_token')
+})
+
 test('surfaces GitHub API failures as typed errors', async () => {
   const client = createGitHubClient({
     fetchImpl: async () => response(403, { message: 'Forbidden' }),

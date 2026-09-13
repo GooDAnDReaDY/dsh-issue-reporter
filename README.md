@@ -11,6 +11,10 @@ Users choose a supported plugin, complete a report, review the redacted preview 
 
 Without a configured GitHub App client id, the plugin explains that sign-in is unavailable. Without an authorized account, it keeps the prefilled issue-form fallback available.
 
+The reporter follows the native DSH settings interaction: click the full reporter header row to expand or collapse it, then click a supported plugin's full row to open its report editor. There is no separate trailing action button for either operation.
+
+GitHub Device Flow must be enabled in the GitHub App registration. The plugin requests the temporary device code and OAuth token from github.com; it uses api.github.com only for authenticated GitHub API operations. A 404 Not Found from the sign-in action indicates an outdated build that sends the OAuth request to the REST API host.
+
 ## Documentation
 
 - [Design contract](docs/design/DESIGN.md)
