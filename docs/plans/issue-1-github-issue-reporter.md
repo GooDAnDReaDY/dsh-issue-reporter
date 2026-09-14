@@ -39,3 +39,11 @@ When an account is configured, the authorization section exposes a Sign out acti
 - [ ] Isolated MiniPC plugin install and smoke checks pass.
 - [ ] Gitea issue has evidence and remains open until the complete workflow.
 - [ ] Publication/deploy wait for explicit owner approval.
+
+## Release preparation addendum — 2026-09-14
+
+- The complete implementation is present on the release candidate branch from the merged `origin/main` baseline.
+- User-facing documentation has been expanded in English, Chinese, and Russian; the design contract, changelog, and project index now describe the final feature set and the publication boundary.
+- The npm package allowlist is restricted to runtime/public documentation files and excludes internal plans from the published artifact.
+- The previously installed production candidate was manually accepted by the owner for issue creation both with and without a screenshot; no new external issue should be created by automated checks.
+- Remaining release gates are the final deterministic tests, exact package dry-run, isolated MiniPC package cycle, repository review/merge, and explicit owner approval before GitHub/npm publication.

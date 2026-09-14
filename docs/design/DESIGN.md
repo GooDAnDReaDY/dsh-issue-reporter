@@ -41,3 +41,11 @@ Screenshot uploads require GitHub CLI 2.99 or newer on the DSH host and GitHub.c
 ## Non-goals for issue #3
 
 GitHub OAuth App registration, automatic token refresh, account profile display, video uploads, plugin mutation, GitHub/npm publication, and production deployment.
+
+## Release candidate addendum — 2026-09-14
+
+The implementation is being prepared as version `0.1.0` under the public package identity `@goodandready/dsh-issue-reporter`. The candidate includes the complete issue-1 workflow and the issue-3 interaction changes described above: OAuth App Device Flow, account switching, native/third-party plugin groups, full-row interaction, privacy-safe drafting, duplicate search, explicit confirmation, and bounded screenshot attachments.
+
+The package allowlist includes runtime files, localized READMEs, the design contract, and release metadata. Internal agent instructions, inventory indexes, and implementation plans remain repository documentation and are excluded from the published npm package.
+
+Publication is intentionally not part of this preparation step. The candidate must pass the deterministic test suite, npm pack inspection, isolated MiniPC install/smoke/cleanup, and final repository review before the owner is asked to approve publication.
