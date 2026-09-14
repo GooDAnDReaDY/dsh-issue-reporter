@@ -1,6 +1,6 @@
 {
   "name": "@goodandready/dsh-issue-reporter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Preview and submit actionable GitHub bug reports from DeepSeek Harness",
   "license": "MIT",
   "type": "module",
@@ -10,7 +10,8 @@
     "./client": "./lib/client.js",
     "./domain": "./lib/domain.js",
     "./github": "./lib/github.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./plugin-updater": "./lib/plugin-updater.js"
   },
   "files": [
     "lib/",
