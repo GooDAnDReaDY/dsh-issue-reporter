@@ -9,6 +9,8 @@ The settings card discovers installed plugins from the current DSH composition a
 
 Users choose a supported plugin, complete a report, review the redacted preview and possible duplicates, and explicitly confirm before an issue is created. GitHub authorization is started from a single "Sign in with GitHub" action. The technical Device Flow client id, credential reference and API URL are installation configuration, not user-facing form fields.
 
+The report editor can optionally attach up to five PNG, JPG, GIF, or WebP screenshots. Attachments remain in the browser until the explicit confirmation and are uploaded with the official GitHub CLI attachment flow (gh 2.99 or newer) in a temporary directory that is removed afterward. GitHub App tokens cannot upload attachments through this flow; use GitHub OAuth or a personal access token for screenshot reports. Reports without screenshots continue to use the GitHub REST API.
+
 Without a configured GitHub App client id, the plugin explains that sign-in is unavailable. Without an authorized account, it keeps the prefilled issue-form fallback available.
 
 The reporter follows the native DSH settings interaction: click the full reporter header row to expand or collapse it, then click a supported plugin's full row to open its report editor. There is no separate trailing action button for either operation.
