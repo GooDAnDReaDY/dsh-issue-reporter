@@ -18,6 +18,11 @@
 
 ## Delivery slices
 
+
+## Account switching
+
+When an account is configured, the authorization section exposes a Sign out action. It removes the OAuth material from DSH Credentials and clears in-memory Device Flow state, so the next Sign in action can authorize a different GitHub account.
+
 1. Package identity, design contract, domain validation/redaction/composition,
    and fixtures.
 2. Host GitHub client, Device Flow, credential storage, catalog and issue

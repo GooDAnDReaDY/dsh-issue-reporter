@@ -8,6 +8,8 @@ The plugin turns a discovered DSH plugin defect into a reviewable GitHub issue d
 
 - Settings card: discover the current DSH plugin composition and show native @deepseek-ai/* and third-party plugins in independent collapsible groups.
 - GitHub authorization: show a short explanation and one "Sign in with GitHub" action. Installation-only values (public Device Flow client id, credential reference and API base URL) stay out of the normal user form.
+
+- Changed in 2026-09-14: when an account is configured, the authorization section also offers Sign out. It clears the stored OAuth material and lets the user authorize a different GitHub account.
 - Report editor: title, observed behavior, reproduction, expected behavior, optional DSH/plugin context, optional bounded screenshot attachments, redaction summary, duplicate search, preview, explicit create action, and prefilled-link fallback.
 
 The card has one top-level open/report action; the collapsed state does not repeat that action inside the body. Changed in the post-issue-3 UX follow-up: the whole card header row opens and closes the card, and each supported plugin row opens its report editor, so neither action is represented by a separate trailing button. Every surface has loading, empty, success, error, disabled, and confirmation states. The create action is disabled until a supported repository and valid draft exist.

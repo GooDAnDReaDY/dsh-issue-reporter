@@ -28,7 +28,7 @@ The short Cordis patch id remains dsh-issue-reporter.
 
 ## Security and product constraints
 
-- GitHub user access is OAuth Device Flow for a GitHub App; no shared bot token and no client secret in the plugin.
+- GitHub user access is OAuth Device Flow for a GitHub OAuth App; no shared bot token and no client secret in the plugin.
 - Store OAuth material only through DSH Credentials; settings may contain only the credential reference.
 - External writes require a visible preview and strict explicit confirmation.
 - Redact secrets, tokens, private paths, and likely personal data before a draft is created.

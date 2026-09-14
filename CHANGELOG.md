@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added explicit GitHub sign-out to clear the stored account credential and support switching accounts.
+
 - Prevented a slow remote inventory adapter from blocking the local plugin catalog and GitHub sign-in status.
 
 - Fixed GitHub App Device Flow requests to use the GitHub OAuth host instead of the REST API host.
