@@ -16,7 +16,7 @@ The card has one top-level open/report action; the collapsed state does not repe
 
 1. The browser reads the point-in-time composition through ctx.remote.pluginInventory.list().
 2. The host enriches module names from package metadata, categorizes package names, and returns only validated GitHub repository targets.
-3. Device Flow runs against GitHub without a client secret: code and token requests use the GitHub web OAuth host (github.com), while repository and user API calls use the configured REST API host (api.github.com by default). The host stores returned OAuth material in DSH Credentials under the installation-configured reference.
+3. Device Flow runs against a GitHub OAuth App without a client secret and requests the repo scope: code and token requests use the GitHub web OAuth host (github.com), while repository and user API calls use the configured REST API host (api.github.com by default). The host stores returned OAuth material in DSH Credentials under the installation-configured reference.
 4. Draft text is redacted and composed locally/host-side. Duplicate search is read-only. Selected screenshots stay in browser memory until confirmation. A report without screenshots is created through GitHub REST; a report with screenshots is created through the official GitHub CLI attachment flow in a bounded temporary directory, which is deleted after the command exits.
 
 ## Trust boundaries
@@ -34,8 +34,8 @@ English is the source locale. Chinese (zh) is required. User-facing Russian stri
 
 ## Attachment limitation
 
-Screenshot uploads require GitHub CLI 2.99 or newer on the DSH host and GitHub.com or GitHub Enterprise Cloud support for gh issue create --attach. GitHub App tokens are not supported by this GitHub CLI attachment flow, so users must use GitHub OAuth or a personal access token for reports that include screenshots. Plain issue creation remains available with the existing Device Flow token.
+Screenshot uploads require GitHub CLI 2.99 or newer on the DSH host and GitHub.com or GitHub Enterprise Cloud support for gh issue create --attach. GitHub App tokens are not supported by this GitHub CLI attachment flow, so users must use a GitHub OAuth App token or a personal access token for reports that include screenshots. Plain issue creation remains available with the existing OAuth App Device Flow token.
 
 ## Non-goals for issue #3
 
-GitHub App registration, automatic token refresh, account profile display, video uploads, plugin mutation, GitHub/npm publication, and production deployment.
+GitHub OAuth App registration, automatic token refresh, account profile display, video uploads, plugin mutation, GitHub/npm publication, and production deployment.
