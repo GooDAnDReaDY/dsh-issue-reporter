@@ -56,6 +56,7 @@ test('uses the GitHub web host for Device Flow while keeping REST API configurab
   assert.equal(url.origin, 'https://github.com')
   assert.equal(url.pathname, '/login/device/code')
   assert.equal(url.searchParams.get('client_id'), 'public-client-id')
+  assert.equal(url.searchParams.get('scope'), 'repo')
   assert.equal(calls[0].options.body, undefined)
 })
 

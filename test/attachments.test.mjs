@@ -4,6 +4,7 @@ import {
   MAX_ATTACHMENT_BYTES,
   MAX_ATTACHMENTS,
   normalizeAttachments,
+  validateAttachmentToken,
 } from '../lib/attachments.js'
 
 const png = Buffer.from('png').toString('base64')
@@ -41,4 +42,13 @@ test('enforces screenshot count and size limits', () => {
     () => normalizeAttachments([{ name: 'large.png', mime: 'image/png', data: oversized }]),
     /8 MB/,
   )
+})
+
+test('rejects GitHub App tokens for screenshot uploads', () => {
+  assert.throws(
+    () => validateAttachmentToken('ghu_user-access-token'),
+    /GitHub App tokens are not supported/,
+  )
+  assert.doesNotThrow(() => validateAttachmentToken('gho_oauth-token'))
+  assert.doesNotThrow(() => validateAttachmentToken('github_pat_fine-grained-token'))
 })
