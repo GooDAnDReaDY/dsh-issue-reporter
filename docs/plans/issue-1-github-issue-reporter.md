@@ -33,11 +33,11 @@ When an account is configured, the authorization section exposes a Sign out acti
 
 ## Definition of Done
 
-- [ ] Implementation committed and pushed to the issue branch.
-- [ ] npm test and static checks pass.
-- [ ] No secrets or local infrastructure details in publishable files.
-- [ ] Isolated MiniPC plugin install and smoke checks pass.
-- [ ] Gitea issue has evidence and remains open until the complete workflow.
+- [x] Implementation committed and pushed to the issue branch.
+- [x] npm test and static checks pass.
+- [x] No secrets or local infrastructure details in publishable files.
+- [x] Isolated MiniPC plugin install and smoke checks pass.
+- [x] Gitea issue has evidence and remains open until the complete workflow.
 - [ ] Publication/deploy wait for explicit owner approval.
 
 ## Release preparation addendum — 2026-09-14
@@ -46,4 +46,4 @@ When an account is configured, the authorization section exposes a Sign out acti
 - User-facing documentation has been expanded in English, Chinese, and Russian; the design contract, changelog, and project index now describe the final feature set and the publication boundary.
 - The npm package allowlist is restricted to runtime/public documentation files and excludes internal plans from the published artifact.
 - The previously installed production candidate was manually accepted by the owner for issue creation both with and without a screenshot; no new external issue should be created by automated checks.
-- Remaining release gates are the final deterministic tests, exact package dry-run, isolated MiniPC package cycle, repository review/merge, and explicit owner approval before GitHub/npm publication.
+- Final deterministic tests, exact package dry-run, isolated MiniPC package cycle, repository review/merge, and Gitea evidence are complete; the only remaining gate is explicit owner approval before GitHub/npm publication.
