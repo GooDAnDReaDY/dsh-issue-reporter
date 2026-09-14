@@ -87,3 +87,22 @@ test('surfaces GitHub API failures as typed errors', async () => {
     return true
   })
 })
+
+test('refreshes GitHub App user access tokens with a refresh token', async () => {
+  let called
+  const client = createGitHubClient({
+    baseUrl: 'https://api.github.com',
+    fetchImpl: async (url, options) => {
+      called = { url, options }
+      return response(200, { access_token: 'new-access-token', refresh_token: 'new-refresh-token' })
+    },
+  })
+  const result = await client.refreshToken('public-client-id', 'old-refresh-token')
+  assert.equal(result.access_token, 'new-access-token')
+  const url = new URL(called.url)
+  assert.equal(url.origin, 'https://github.com')
+  assert.equal(url.pathname, '/login/oauth/access_token')
+  assert.equal(url.searchParams.get('client_id'), 'public-client-id')
+  assert.equal(url.searchParams.get('refresh_token'), 'old-refresh-token')
+  assert.equal(called.options.body, undefined)
+})
