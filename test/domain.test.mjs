@@ -10,6 +10,7 @@ import {
   isDeviceFlowExpired,
   nextDevicePoll,
   parseGitHubRepository,
+  parseForgeRepository,
   prefilledIssueUrl,
   redactText,
   serializeCredential,
@@ -95,4 +96,40 @@ test('advances and expires device flow safely', () => {
   assert.equal(slower.intervalMs, 10000)
   assert.equal(isDeviceFlowExpired(slower, 11001), true)
   assert.match(serializeCredential({ access_token: 'opaque', refresh_token: 'refresh' }), /opaque/)
+})
+
+test('parses forge repositories including gitea', () => {
+  const gitea = parseForgeRepository('https://gitea.example.com/team/addon.git')
+  assert.equal(gitea.forge, 'gitea')
+  assert.equal(gitea.owner, 'team')
+  assert.equal(gitea.repo, 'addon')
+  assert.equal(gitea.url, 'https://gitea.example.com/team/addon')
+  assert.equal(gitea.issuesUrl, 'https://gitea.example.com/team/addon/issues')
+
+  const gh = parseForgeRepository('https://github.com/acme/widget')
+  assert.equal(gh.forge, 'github')
+  assert.equal(gh.fullName, 'acme/widget')
+})
+
+test('composes issue draft with diagnostics and error details', () => {
+  const draft = composeIssueDraft({
+    title: 'Failure in core',
+    observed: 'Plugin stopped',
+    environment: 'Linux x64',
+    diagnostics: 'Node v22.1.0\nDSH 4.0',
+    errorStack: 'Error: boom at /home/user/app.js:10',
+  })
+  assert.ok(draft.body.includes('Diagnostics:'))
+  assert.ok(draft.body.includes('Node v22.1.0'))
+  assert.ok(draft.body.includes('Error stack / details'))
+  assert.equal(draft.body.includes('/home/user'), false)
+})
+
+test('findDuplicateIssues preserves issue state', () => {
+  const result = findDuplicateIssues([
+    { number: 10, title: 'Bug in login', state: 'closed', html_url: 'https://github.com/acme/widget/issues/10' },
+    { number: 11, title: 'Bug in login flow', state: 'open', html_url: 'https://github.com/acme/widget/issues/11' },
+  ], { title: 'Bug in login' })
+  assert.equal(result[0].state, 'closed')
+  assert.equal(result[1].state, 'open')
 })

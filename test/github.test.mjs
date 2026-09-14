@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGitHubClient, GitHubApiError } from '../lib/github.js'
+import { createGitHubClient, createGiteaClient, GitHubApiError } from '../lib/github.js'
 
 function response(status, payload) {
   return {
@@ -106,4 +106,36 @@ test('refreshes GitHub App user access tokens with a refresh token', async () =>
   assert.equal(url.searchParams.get('client_id'), 'public-client-id')
   assert.equal(url.searchParams.get('refresh_token'), 'old-refresh-token')
   assert.equal(called.options.body, undefined)
+})
+
+test('creates gitea client and manages issues and search', async () => {
+  const calls = []
+  const client = createGiteaClient({
+    baseUrl: 'https://gitea.example.com',
+    token: 'gitea-token',
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options })
+      if (url.includes('/issues/42')) return response(200, { number: 42, state: 'closed', title: 'Fixed' })
+      if (url.includes('/issues')) return response(200, [{ number: 42, title: 'Fixed' }])
+      return response(200, { username: 'gitea-user' })
+    },
+  })
+  const search = await client.searchIssues('acme', 'widget', 'login', 'closed')
+  assert.match(calls[0].url, /state=closed/)
+  assert.equal(calls[0].options.headers.Authorization, 'token gitea-token')
+  const single = await client.getIssue('acme', 'widget', 42)
+  assert.equal(single.number, 42)
+  assert.equal(single.state, 'closed')
+})
+
+test('github searchIssues supports state parameter', async () => {
+  const calls = []
+  const client = createGitHubClient({
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options })
+      return response(200, { items: [] })
+    },
+  })
+  await client.searchIssues('acme', 'widget', 'login', 'closed')
+  assert.match(calls[0].url, /is%3Aclosed/)
 })

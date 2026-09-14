@@ -49,3 +49,15 @@ The implementation is being prepared as version `0.1.0` under the public package
 The package allowlist includes runtime files, localized READMEs, the design contract, and release metadata. Internal agent instructions, inventory indexes, and implementation plans remain repository documentation and are excluded from the published npm package.
 
 Publication is intentionally a separate controlled step. The candidate passed the deterministic test suite, npm pack inspection, isolated MiniPC install/smoke/cleanup, and final repository review; the owner has approved publication of this version.
+
+## Design System & Usability Addendum — 2026-09-14 (v0.1.1)
+
+- **dsh-clinebot Design Alignment**: central CSS injection via `ensureCss()` using standard DSH theme variables (`--dsw-alias-bg-layer-*`, `--dsw-alias-border-*`, `--dsw-alias-label-*`, `--dsw-alias-state-*`). Top header displays status capsule badges (`.ir-badge`) for GitHub connectivity, plugin inventory counts, and Node.js runtime.
+- **ErrorBoundary**: the settings card root is protected with an ErrorBoundary component to isolate rendering failures and offer in-place retry.
+- **Navigation Tabs**: four logical tabs (`Catalog`, `Report Editor`, `My Reports`, `Authorization`) keep the card compact and task-focused.
+- **Search & Filtering**: real-time filter input above plugin lists allows instant location by name, module, or description.
+- **Clipboard Paste & Dropzone**: screenshot attachments support `Ctrl+V` clipboard paste from screenshot utilities and drag-and-drop file zones with thumbnail cards, size badges, and deletion controls.
+- **Dual-mode Editor**: `Write` and `Preview` sub-views provide side-by-side editing and formatted Markdown inspection before confirmation.
+- **Automated Diagnostics**: system runtime context (Node.js, OS, architecture) is automatically gathered and safely redacted into the Environment section. Plugins with runtime failures offer a one-click Quick Report with captured stack traces.
+- **Multi-Forge Architecture**: targets expand to include local and self-hosted Gitea/Forgejo instances alongside GitHub repositories.
+- **Issue Tracking**: submitted issues are preserved in local storage and displayed in the 'My Reports' tab with live status checks (`Open`/`Closed`).

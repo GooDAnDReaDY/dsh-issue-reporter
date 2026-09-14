@@ -2,13 +2,18 @@
 
 ## Unreleased
 
-- Added explicit GitHub sign-out to clear the stored account credential and support switching accounts.
-
-- Prevented a slow remote inventory adapter from blocking the local plugin catalog and GitHub sign-in status.
-
-- Fixed GitHub App Device Flow requests to use the GitHub OAuth host instead of the REST API host.
-- Sent Device Flow parameters as query parameters required by GitHub OAuth endpoints.
-- Made the reporter card header and supported plugin inventory rows the clickable actions, removing trailing duplicate action buttons.
+- Brought reporter UI design and styling to the `dsh-clinebot` standard with `ensureCss()` and native DSH design tokens (Refs: #24).
+- Added top header status capsule badges for GitHub auth, inventory count, and Node.js runtime (Refs: #24).
+- Protected settings card with an isolated `ErrorBoundary` component (Refs: #24).
+- Added navigation tabs: Catalog, Report Editor, My Reports, and Authorization (Refs: #25).
+- Added real-time instant search and filter input across installed plugins (Refs: #25).
+- Added dual-mode `Write` / `Preview` views for formatted markdown inspection (Refs: #25).
+- Added Device Flow 1-click `Copy Code` action with confirmation feedback (Refs: #25).
+- Added screenshot attachment via `Ctrl+V` clipboard paste and interactive drag-and-drop zone with thumbnail gallery (Refs: #19).
+- Added automatic environment diagnostics collection and quick-reporting for failed plugins with captured stack traces (Refs: #20).
+- Added closed issues search option for duplicate detection and GitHub Issue Templates inspection (Refs: #21).
+- Added persistent tracking of submitted issues with live status checks in the 'My Reports' tab (Refs: #22).
+- Added multi-forge support for local and self-hosted Gitea / Forgejo repositories (Refs: #23).
 
 ## 0.1.0
 

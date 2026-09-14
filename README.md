@@ -104,7 +104,22 @@ Users can attach up to 5 screenshots (PNG, JPG, GIF, WebP; 8 MiB per file, 20 Mi
 ### 6. Runtime Modules
 
 | Module | Responsibility |
-|:---|:---|
+|:### 6. Clipboard Paste (Ctrl+V) & Drag-and-Drop (v0.1.1)
+Paste screenshots directly from the clipboard (`Ctrl+V` from system snipping tools) or drag-and-drop image files into an interactive dropzone with visual thumbnail cards and size indicators.
+
+### 7. Automated System Diagnostics & Crash Prefill (v0.1.1)
+Captures sanitized runtime diagnostics (Node.js, OS platform, architecture, DSH versions) without private paths or credentials. Plugins in a runtime failure state provide a one-click Quick Report with captured error stacks.
+
+### 8. Tab Navigation & Instant Search (v0.1.1)
+Styled according to the `dsh-clinebot` design system with clean tabs (Catalog, Report Editor, My Reports, Authorization) and a real-time instant search filter across all installed plugins.
+
+### 9. Issue Lifecycle Tracking (v0.1.1)
+The 'My Reports' tab maintains a local history of submitted issues, offering one-click status checks (`Open` / `Closed`) and direct links.
+
+### 10. Multi-Forge Support (Gitea / Forgejo) (v0.1.1)
+In addition to GitHub, the reporter detects repositories on local and self-hosted Gitea/Forgejo instances, supporting Gitea REST issue creation and duplicate lookups.
+
+---|:---|
 | `lib/domain.js` | Repository parsing, native/third-party classification, redaction, draft composition, duplicate ranking, and credential serialization |
 | `lib/github.js` | GitHub OAuth Device Flow, refresh token exchange, authenticated user lookup, and REST issue creation |
 | `lib/attachments.js` | Screenshot validation, size/count limits, temporary file lifecycle, and GitHub CLI execution |
