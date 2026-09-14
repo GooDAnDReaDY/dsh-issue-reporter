@@ -48,4 +48,4 @@ The implementation is being prepared as version `0.1.0` under the public package
 
 The package allowlist includes runtime files, localized READMEs, the design contract, and release metadata. Internal agent instructions, inventory indexes, and implementation plans remain repository documentation and are excluded from the published npm package.
 
-Publication is intentionally not part of this preparation step. The candidate passed the deterministic test suite, npm pack inspection, isolated MiniPC install/smoke/cleanup, and final repository review; the remaining gate is the owner's explicit approval of publication.
+Publication is intentionally a separate controlled step. The candidate passed the deterministic test suite, npm pack inspection, isolated MiniPC install/smoke/cleanup, and final repository review; the owner has approved publication of this version.

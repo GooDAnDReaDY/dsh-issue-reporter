@@ -267,8 +267,8 @@ returns a prefilled issue-form URL instead of silently attempting a write.
 
 ## Release status
 
-Version `0.1.0` is the current release candidate. Publication to the public
-GitHub repository and npm is intentionally a separate owner-approved step.
+Version `0.1.0` is the owner-approved public release candidate for the GitHub
+repository and npm distribution.
 
 ## License
 

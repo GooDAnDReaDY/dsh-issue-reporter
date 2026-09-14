@@ -25,4 +25,4 @@
 - Added PNG, JPG, GIF, and WebP screenshots with count, per-file, total-size, MIME, extension, base64, temporary-file, and cleanup checks.
 - Added the GitHub CLI attachment path for `gh` 2.99 or newer; screenshot reports require a GitHub OAuth App token or personal access token, while reports without screenshots use the GitHub REST API.
 - Added typed GitHub API errors, same-origin route protection, sanitized status responses, and no-store responses.
-- Publication remains pending explicit owner approval; this entry describes the candidate and does not publish GitHub or npm artifacts.
+- Publication is owner-approved; this entry describes the candidate for the public GitHub and npm release.

@@ -170,7 +170,7 @@ dsh-issue-reporter:
 
 ## 发布状态
 
-版本 `0.1.0` 是当前 release candidate。公开 GitHub 仓库和 npm 的发布仍然是需要所有者单独批准的步骤。
+版本 `0.1.0` 是已获所有者批准、面向公开 GitHub 仓库和 npm 分发的 release candidate。
 
 ## 许可证
 
