@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.2
+
+- Registered autonomous `report_issue` tool in Cordis `ctx.tools` for agent-driven error triage and safe drafting (Refs: #28).
+- Added AI-assisted draft optimization via `ctx.llm` / `/dsh-issue-reporter/ai/optimize` for reproduction steps and titles (Refs: #29).
+- Added live session log snippet selector via `/dsh-issue-reporter/logs` with automated redaction (Refs: #30).
+- Added issue watcher with batch status polling via `/dsh-issue-reporter/issues/batch-status` (Refs: #31).
+- Added smart auto-labeling and component detection via `/dsh-issue-reporter/labels` (Refs: #32).
+- Added canonical one-click plugin updater in settings card from npm registry with loopback validation (Refs: #33).
+
 ## 0.1.1
 
 - Brought reporter UI design and styling to the `dsh-clinebot` standard with `ensureCss()` and native DSH design tokens (Refs: #24).

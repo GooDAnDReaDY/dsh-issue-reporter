@@ -92,6 +92,24 @@ The built-in editor captures structured report fields:
 * **Live Redacted Preview**: Displays exactly what will be sent, including a detailed count of redacted items.
 * **Safe Fallback**: If no GitHub account is connected, the editor provides a prefilled GitHub issue-form link for manual submission.
 
+### 5. Autonomous Agent Reporting Tool (`report_issue`)
+Registers an official tool in Cordis `ctx.tools` allowing autonomous coding agents and orchestrators to prepare or file structured bug reports whenever an installed plugin encounters an unhandled exception or runtime crash.
+
+### 6. AI Summary & Repro Step Generator
+Integrated with `ctx.llm` via `POST /dsh-issue-reporter/ai/optimize`, allowing users to polish unstructured error notes into clean, reproducible steps and an actionable issue title with one click.
+
+### 7. Live Telemetry & Session Log Selector
+Inspects recent host session logs via `GET /dsh-issue-reporter/logs`, providing a redacted log checklist to easily attach relevant server traces to the bug report.
+
+### 8. Issue Watcher & Live Status Tracking
+The "My Reports" tab persists submitted tickets and performs batch status verification (`POST /dsh-issue-reporter/issues/batch-status`), showing live open/closed status badges and comment counts.
+
+### 9. Smart Auto-Labeling & Component Detection
+Queries upstream repository labels via `POST /dsh-issue-reporter/labels` and automatically recommends matching category tags (`bug`, `ui`, `performance`, `auth`).
+
+### 10. One-Click Settings Card Updater
+In-place npm updater conforming to DSH standards: checks the registry on mount and provides an explicit "Update" button with same-origin and loopback security.
+
 ### 4. Read-Only Duplicate Search
 Before submission, the plugin searches existing GitHub issues in the target repository using normalized tokens from the title and body. It ranks up to five potential duplicates to avoid noise.
 

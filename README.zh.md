@@ -90,6 +90,24 @@ graph LR
 
 未登录状态下，支持一键生成带预填参数的 GitHub Issue 网页链接供用户手动提交。
 
+### 5. 自主 Agent 报告工具 (`report_issue`)
+在 Cordis `ctx.tools` 中注册官方工具，允许自主编程 Agent 与任务编排器在插件发生异常时自动提炼并起草规范的 Issue。
+
+### 6. AI 润色与复现步骤生成器
+通过 `POST /dsh-issue-reporter/ai/optimize` 与 `ctx.llm` 联动，一键将零散的报错描述转化为清晰专业的复现步骤与精准标题。
+
+### 7. 实时会话日志与片段选择器
+通过 `GET /dsh-issue-reporter/logs` 检索最近的宿主会话日志，经过自动脱敏后支持勾选插入到诊断报告中。
+
+### 8. Issue 追踪器与状态同步
+“我的报告”标签页记录提交记录并支持批量刷新 (`POST /dsh-issue-reporter/issues/batch-status`)，实时展示 open/closed 状态与评论数。
+
+### 9. 智能标签推荐与组件识别
+通过 `POST /dsh-issue-reporter/labels` 查询远端仓库可用标签，并智能推荐匹配分类 (`bug`, `ui`, `performance`, `auth`)。
+
+### 10. 设置卡片一键更新
+遵循 DSH 规范的原生 npm 更新机制：自动检查版本并在设置卡片中提供一键更新按钮，支持同一来源及回环地址安全保护。
+
 ### 4. 重复 Issue 智能检索
 在提交前，插件根据标题和正文关键词向目标仓库发起只读检索，按相关度推荐前 5 个最相似的候选 Issue，避免重复提单干扰开源项目维护者。
 
