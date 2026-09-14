@@ -1,46 +1,57 @@
-# dsh-issue-reporter
+# 📦 @goodandready/dsh-issue-reporter
 
-这是一个 DeepSeek Harness 插件，用于将已发现的插件问题整理成安全、可审核的 GitHub issue。
+<div align="center">
 
-设置卡片会读取当前 DSH 组合，并提供两个可以分别展开或折叠的列表：
+<h3>面向 DeepSeek Harness 的安全 GitHub 插件 Bug 报告与隐私脱敏工具</h3>
 
-- 原生 DSH 插件：package scope 为 @deepseek-ai/。
-- 第三方插件：其他 package scope 的插件。
+<p align="center">
+  <a href="https://www.npmjs.com/package/@goodandready/dsh-issue-reporter"><img src="https://img.shields.io/npm/v/@goodandready/dsh-issue-reporter.svg?style=for-the-badge&color=6366f1&labelColor=1e1b4b" alt="npm version"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-10b981.svg?style=for-the-badge&color=10b981&labelColor=064e3b" alt="license"></a>
+  <a href="https://github.com/topics/dsh-plugin"><img src="https://img.shields.io/badge/DSH-Plugin-8b5cf6.svg?style=for-the-badge&labelColor=2e1065" alt="DSH Plugin"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node-20%2B-f59e0b.svg?style=for-the-badge&labelColor=451a03" alt="Node version"></a>
+</p>
 
-用户选择受支持的插件，填写报告，检查已隐藏敏感信息的预览和可能的重复 issue，然后明确确认后才会创建 issue。GitHub 授权从一个“使用 GitHub 登录”操作开始。OAuth App Device Flow client id、凭据引用和 API 地址属于安装配置，不再作为普通用户需要填写的字段。
+<!-- 作者全部项目 -->
+<p align="center">
+  <a href="https://goodandready.app/"><img src="https://img.shields.io/badge/作者全部项目-goodandready.app-ff4500.svg?style=for-the-badge&logo=rocket&logoColor=white&labelColor=1a1a2e" alt="作者全部项目"></a>
+</p>
 
-连接 GitHub 账号后，授权区域还会显示“退出登录”。退出登录会从 DSH Credentials 中删除已保存的 OAuth 信息；之后可以使用另一个账号重新登录。
+<p align="center">
+  <a href="README.md"><b>🇬🇧 English</b></a> •
+  <a href="README.ru.md"><b>🇷🇺 Русский</b></a> •
+  <a href="README.zh.md"><b>🇨🇳 中文说明</b></a>
+</p>
 
-报告编辑器可以选择最多五张 PNG、JPG、GIF 或 WebP 截图。只有在明确确认后，截图才会从浏览器发送；服务器通过官方 GitHub CLI 附件流程（DSH 主机需要 gh 2.99 或更高版本）在临时目录中上传，命令结束后会删除临时文件。GitHub App token 不支持此附件流程，因此带截图的报告需要使用 GitHub OAuth App 或个人访问令牌。不带截图的报告仍然使用 GitHub REST API。
-如果安装没有配置 GitHub OAuth App client id，插件会明确提示登录不可用。如果没有授权账号，仍然会提供预填充的 issue 表单链接。
+<!-- 强制性项目支持模块 -->
+<table align="center">
+  <tr>
+    <td align="center">
+      ⭐ <strong>如果您喜欢这个插件，请在 GitHub 上为它点亮 Star</strong> — 这能让我知道插件对您有用，并鼓励我继续开发和维护它。
+      <br><br>
+      🐛 <strong>如果您发现 Bug 或希望增加功能</strong>，请使用任意语言在 GitHub 上提交 Issue — 我会评估您的建议，并在后续版本中实现有价值的改进。
+    </td>
+  </tr>
+</table>
 
-报告器遵循 DSH 原生设置交互：点击报告器的整行标题即可展开或折叠，然后点击受支持插件的整行即可打开报告编辑器。两种操作都不再使用右侧单独的按钮。
+</div>
 
-必须先在 GitHub OAuth App 注册设置中启用 Device Flow。插件从 github.com 请求临时设备代码和带有 repo scope 的 OAuth token；Device Flow 参数按 GitHub API 要求通过 query 参数传递；并仅使用 api.github.com 执行已认证的 GitHub API 操作。如果登录操作返回 404 Not Found，通常表示仍在运行把 OAuth 请求发送到 REST API 域名的旧版本。
+---
 
-## 文档
+## ⚡ 概览与核心定位
 
-- [设计契约](docs/design/DESIGN.md)
-- [Issue #1 实现计划](docs/plans/issue-1-github-issue-reporter.md)
-- [Issue #3 UX、授权和分组计划](docs/plans/issue-3-ux-auth-plugin-groups.md)
-- [English documentation](README.md)
-- [Russian documentation](README.ru.md)
+在 **DeepSeek Harness** 中进行自动化任务或开发时，用户经常会遇到已安装插件的异常。传统情况下提交 Bug 报告既繁琐又容易泄露机密：用户需要手动查找目标仓库，组织复现步骤，并极易无意泄露 API Key、内网地址或本地隐私路径。
 
-## 开发
+**`@goodandready/dsh-issue-reporter`** 实现了从发现插件故障到向上游提交高质量规范报告的自动化闭环：
+* **运行时插件探测**：自动读取当前 DSH 组合，提取具备公开 GitHub 仓库的插件。
+* **双列表智能分组**：将原生 `@deepseek-ai/` 核心插件与第三方生态插件归类为两个独立折叠面板。
+* **隐私脱敏与安全边界**：自动过滤并脱敏 API Token、凭据参数、绝对文件路径与邮件地址。
+* **重复 Issue 实时检索**：自动检索目标仓库现有 Issue，防止重复提单。
+* **截图附件安全上传**：通过官方 GitHub CLI (`gh issue create --attach`) 支持最多 5 张截图上传，并在完成后自动清理临时目录。
+* **严格的用户确认控制**：在执行任何 GitHub 写入操作前，均需用户亲自预览脱敏内容并勾选确认 (`confirm: true`)。
 
-运行确定性的测试套件：
+---
 
-    npm test
-
-GitHub OAuth App 注册、发布和生产部署需要单独的所有者批准。
-
-## 概览
-
-这个插件把“发现 DSH 插件故障”和“提交一份对上游真正有用的报告”连接起来。它读取已安装的插件组合，解析公开的 GitHub 仓库，生成结构化报告，移除常见敏感信息，查找可能的重复 issue，并在任何 GitHub 写操作前等待用户明确确认。
-
-这是一个 DSH 设置插件：`lib/client.js` 负责浏览器界面，`lib/index.js` 负责受保护的 HTTP 路由和 DSH 服务集成。插件不会修改、启用、禁用或更新已安装的插件。
-
-## 架构
+## 🏗️ 架构设计
 
 ```mermaid
 graph LR
@@ -56,122 +67,125 @@ graph LR
   D --> K[DSH Credentials]
 ```
 
-## 功能说明
+---
 
-### 插件目录与分组
+## ✨ 核心功能
 
-目录来自当前 DSH loader 的一次性快照。插件会去重、校验 package 元数据，并且只有公开且可验证的 GitHub 仓库会成为报告目标。名称以 `@deepseek-ai/` 开头的包归入 **Native DSH plugins**；其他有效包归入 **Third-party plugins**。两个列表可以独立展开或折叠。
+### 1. 插件目录与独立分组
+插件在加载时自动检查当前 DSH 运行环境中的所有插件。自动过滤无公开 GitHub 仓库的内部包，将可用目标整理为两组：
+* **原生 DSH 插件**：包名以 `@deepseek-ai/` 开头的核心组件。
+* **第三方生态插件**：所有其他由社区或第三方开发的扩展。
 
-每个支持报告的插件行显示包名、仓库和一个报告操作。点击卡片标题整行可以展开或折叠报告器；点击插件整行可以打开编辑器，不会再渲染重复的尾部按钮。
+点击任意支持插件的整行即可快速展开报告编辑器。
 
-### GitHub 授权
+### 2. GitHub OAuth Device Flow 授权
+采用 GitHub 官方标准设备码流（Device Flow），支持一键授权：
+* 点击“使用 GitHub 登录”，系统提供 8 位验证码并引导用户在 GitHub 验证页面批准。
+* 申请 `repo` 权限以支持创建 Issue 及读取现有 Issue 进行重复比对。
+* OAuth Token 安全托管于 **DSH Credentials**（`tokenEnv: GITHUB_ISSUE_REPORTER_TOKEN`），绝不硬编码。
+* 提供“退出登录”按钮，一键从凭据中心吊销并支持切换其他账号。
 
-每个 DSH 用户通过 GitHub OAuth App Device Flow 授权自己的账号。插件请求 `repo` scope，因为创建 issue 和查找重复 issue 都需要仓库权限。公开 OAuth App client id 属于安装配置，不是秘密，也不会出现在报告表单中。访问凭据通过 DSH Credentials 保存。点击 **Sign out** 会删除保存的凭据，之后可以切换另一个账号登录。
+### 3. 报告编辑器与隐私边界
+表单规范化采集问题标题、实际表现、复现步骤、期望结果及环境说明。后端在生成草稿时自动对敏感信息（API Token、密码、私有路径如 `/home/...`、邮箱）进行脱敏遮蔽，并在界面列出脱敏项摘要。
 
-Device Flow 请求使用 `github.com`；已认证的仓库和用户 API 请求使用配置的 GitHub API 地址。OAuth App 注册中必须启用 Device Flow。
+未登录状态下，支持一键生成带预填参数的 GitHub Issue 网页链接供用户手动提交。
 
-### 报告编辑器与隐私边界
+### 4. 重复 Issue 智能检索
+在提交前，插件根据标题和正文关键词向目标仓库发起只读检索，按相关度推荐前 5 个最相似的候选 Issue，避免重复提单干扰开源项目维护者。
 
-编辑器支持标题、实际行为、复现步骤、预期行为、环境说明和可选的 DSH/插件上下文。主机端会限制字段长度，并脱敏 token、credential 赋值、带凭据的 URL、本地路径和邮箱，然后返回安全草稿和脱敏摘要。用户在创建前可以查看仓库、预览和重复候选，并勾选确认。
+### 5. 截图附件安全上传
+支持上传最多 5 张图片（PNG、JPG、GIF、WebP；单张上限 8 MiB，总计上限 20 MiB）：
+* 截图在用户点击确认前仅保存在浏览器内存中。
+* 确认后通过 DSH 主机上的官方 `gh issue create --attach` 在临时隔离目录完成上传，命令退出时在 `finally` 块中立即销毁临时文件。
+* 纯文本报告则直接通过 GitHub REST API 快速创建。
 
-如果没有连接账号，编辑器仍保留预填充的 GitHub issue 表单链接作为安全 fallback。如果仓库不是公开仓库或无法验证，则不会作为报告目标显示。
+---
 
-### 重复 issue 搜索
+## 📦 安装指南
 
-重复搜索是只读操作。插件按安全标题和正文中的归一化词语重叠度对 GitHub issue 候选排序，最多返回五个候选，并且不会把访问令牌放入 URL 或 issue 内容。
-
-### 截图附件
-
-编辑器最多接受五张 PNG、JPG、GIF 或 WebP 截图。单个文件最大 8 MiB，总上传大小最大 20 MiB。文件名会被清理，扩展名和 MIME 类型必须一致，空文件和无效 base64 会被拒绝。
-
-截图在用户确认前只保留在浏览器内存中。主机会把安全 issue 正文和受限附件写入临时目录，调用 `gh issue create --attach`，然后在 finally 清理路径中删除临时目录。截图上传要求 DSH 主机上的 GitHub CLI 2.99 或更高版本。GitHub CLI 的该附件流程不接受 GitHub App user-to-server token，因此带截图的报告必须使用 GitHub OAuth App token 或个人访问令牌。不带截图的报告仍然使用 GitHub REST API。
-
-### 运行时模块
-
-| 模块 | 职责 |
-| --- | --- |
-| `lib/domain.js` | 仓库解析、原生/第三方分类、目录构建、脱敏、草稿组合、重复排序、Device Flow 状态和凭据序列化。 |
-| `lib/github.js` | GitHub OAuth Device Flow、刷新令牌交换、当前用户查询、issue 搜索和 REST issue 创建。 |
-| `lib/attachments.js` | 截图校验、数量/大小上限、临时文件生命周期、GitHub CLI 调用和令牌兼容性检查。 |
-| `lib/auth.js` | 退出登录时删除配置的 GitHub 凭据。 |
-| `lib/index.js` | DSH 设置注册、凭据集成、插件清单增强、同源路由保护和报告流程。 |
-| `lib/client.js` | 英文/中文设置卡片、授权、分组目录、编辑器、预览、重复项、附件和状态界面。 |
-
-## 安装
+安装至 DeepSeek Harness Web 配置文件：
 
 ```bash
 dsh plugin --profile web add @goodandready/dsh-issue-reporter
 ```
 
-如果安装没有自动重新加载插件 bundle，请重启 DSH web profile，然后打开 **Settings → Plugins → GitHub issue reporter**。
+重启 DSH 实例，在左侧导航进入 **设置 → 插件设置 → GitHub Issue Reporter**。
 
-## GitHub OAuth App 配置
+---
 
-1. 创建或选择 GitHub OAuth App。
-2. 在 App 设置中启用 **Device Flow**。
-3. 将公开 client id 放入插件安装配置。
-4. 打开报告器并点击 **Sign in with GitHub**。
-5. 打开 GitHub 的设备验证页面，输入界面显示的代码，并批准目标账号的访问。
-6. 确认卡片显示 **GitHub connected**。切换账号前使用 **Sign out**。
+## ⚙️ GitHub OAuth App 配置
 
-插件不需要 client secret。用户仍必须拥有目标仓库的 issue 创建权限；OAuth 授权不会绕过仓库权限。
+1. 在 GitHub 个人设置进入 Developer settings → OAuth Apps 创建新应用。
+2. 勾选 **Enable Device Flow** 选项。
+3. 将生成的 Client ID 填入 DSH 的 `settings.yaml` 配置项 `appClientId` 中。
+4. 打开 DSH 设置卡片，点击 **Sign in with GitHub**，完成设备绑定。
 
-## 配置
+---
+
+## 🔧 配置项 (`settings.yaml`)
 
 ```yaml
+# settings.yaml
 dsh-issue-reporter:
-  appClientId: <GITHUB_OAUTH_APP_CLIENT_ID>
-  tokenEnv: GITHUB_ISSUE_REPORTER_TOKEN
-  apiBaseUrl: https://api.github.com
+  # 启用了 Device Flow 的 GitHub OAuth App 公开 Client ID
+  appClientId: "YOUR_GITHUB_OAUTH_CLIENT_ID"
+  # 存放 OAuth 令牌的 DSH Credentials 引用名称
+  tokenEnv: "GITHUB_ISSUE_REPORTER_TOKEN"
+  # GitHub REST API 地址 (默认 https://api.github.com)
+  apiBaseUrl: "https://api.github.com"
+  # 网络请求与 CLI 附件上传超时时间 (毫秒)
   timeoutMs: 30000
-  ghPath: gh
+  # 主机上的 gh 命令行可执行文件路径
+  ghPath: "gh"
 ```
 
 | 参数 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `appClientId` | string | 空 | 启用 Device Flow 的 GitHub OAuth App 公开 client id。 |
-| `tokenEnv` | credential reference | `GITHUB_ISSUE_REPORTER_TOKEN` | 保存用户 OAuth 信息的 DSH Credentials 引用。 |
-| `apiBaseUrl` | URL string | `https://api.github.com` | GitHub 或兼容 GitHub Enterprise endpoint 的 REST API 地址。 |
-| `timeoutMs` | number | `30000` | GitHub 请求和附件 CLI 的超时时间。 |
-| `ghPath` | string | `gh` | 仅用于截图报告的 GitHub CLI 可执行文件。 |
+|:---|:---|:---|:---|
+| `appClientId` | `string` | `""` | 启用了 Device Flow 的公开 GitHub OAuth App Client ID |
+| `tokenEnv` | `string` | `"GITHUB_ISSUE_REPORTER_TOKEN"` | 保存 OAuth 凭据的 DSH Credentials 引用名 |
+| `apiBaseUrl` | `string` | `"https://api.github.com"` | GitHub REST API 基础端点 |
+| `timeoutMs` | `number` | `30000` | HTTP 请求与 CLI 执行的超时时间（毫秒） |
+| `ghPath` | `string` | `"gh"` | 主机上的 GitHub CLI (`gh`) 路径 |
 
-## HTTP API 路由
+---
 
-所有路由都要求 DSH 浏览器认证、同源/可信请求检查，并使用 `no-store` 响应。
+## 🔌 HTTP API 路由
 
-| 方法和路由 | 用途 | 外部写操作 |
-| --- | --- | --- |
-| `GET /dsh-issue-reporter/status` | 返回脱敏配置状态和插件目录。 | 无 |
-| `POST /dsh-issue-reporter/device/start` | 启动 OAuth Device Flow 并返回短期 flow id 与用户代码。 | 无 |
-| `POST /dsh-issue-reporter/device/poll` | 轮询授权、校验当前用户并保存凭据。 | 仅凭据存储 |
-| `POST /dsh-issue-reporter/device/logout` | 删除配置的 GitHub 凭据并清理内存中的 flow。 | 仅凭据存储 |
-| `POST /dsh-issue-reporter/draft` | 组合脱敏草稿和预填充 fallback URL。 | 无 |
-| `POST /dsh-issue-reporter/duplicates` | 搜索并排序可能重复的 issue。 | 只读 GitHub |
-| `POST /dsh-issue-reporter/create` | 通过 REST 或 `gh --attach` 创建已确认的 issue。 | GitHub issue |
+所有接口均受 DSH 身份校验及同源安全策略保护。
 
-创建路由要求 `confirm: true`、支持的公开仓库和有效安全草稿。没有连接账号时，它返回预填充 issue 表单链接，不会静默尝试写入。
+| 请求方法与路由 | 用途 | 外部写操作 |
+|:---|:---|:---|
+| `GET /dsh-issue-reporter/status` | 获取配置状态与已检测到的插件目录 | 否 |
+| `POST /dsh-issue-reporter/device/start` | 发起 Device Flow 并获取用户验证码 | 否 |
+| `POST /dsh-issue-reporter/device/poll` | 轮询授权结果并持久化凭据 | DSH Credentials |
+| `POST /dsh-issue-reporter/device/logout` | 退出登录并删除存储的凭据 | DSH Credentials |
+| `POST /dsh-issue-reporter/draft` | 生成脱敏后的报告草稿及脱敏摘要 | 否 |
+| `POST /dsh-issue-reporter/duplicates` | 搜索目标仓库潜在的重复 Issue | 否 (只读 GitHub) |
+| `POST /dsh-issue-reporter/create` | 提交已确认的 Issue (通过 REST 或 `gh`) | GitHub Issue 写入 |
 
-## 限制与排错
+---
 
-| 现象 | 含义与处理 |
-| --- | --- |
-| `GitHub sign-in is not configured` | 在安装配置中设置 OAuth App client id。 |
-| 登录时 `404 Not Found` | 运行的是把 OAuth 请求发到 REST API 域名的旧版本，请更新插件。 |
-| `Resource not accessible by integration` | 当前账号没有目标仓库权限，或仍保存着旧 GitHub App token；退出登录后用 OAuth App 重新授权。 |
-| 截图令牌兼容性错误 | 使用 GitHub OAuth App token 或 PAT，并安装 GitHub CLI 2.99+。 |
-| 没有插件报告操作 | 已安装包没有可验证的公开 GitHub 仓库元数据。 |
+## 🛠️ 限制与排错
 
-## 安全说明
+| 异常现象 | 原因与解决方案 |
+|:---|:---|
+| `GitHub sign-in is not configured` | 请在 `settings.yaml` 中配置 `appClientId`。 |
+| 登录时提示 `404 Not Found` | 请求设备码需指向 `github.com`，而非 `api.github.com`。 |
+| `Resource not accessible by integration` | 当前授权账号没有该仓库的写权限，或缓存了旧 Token。请点击 Sign out 并重新登录。 |
+| 截图附件上传失败 | 确保 DSH 运行主机已安装 GitHub CLI (`gh` 2.99 或更高版本)。 |
+| 某个已安装插件没有报错操作 | 该插件的 package.json 中未配置有效的公开 GitHub 仓库地址。 |
 
-- token 只从 DSH Credentials 解析，不会出现在 UI、设置快照、URL、日志或 issue 正文中。
-- 插件元数据、报告字段、文件名、MIME 类型和 base64 内容在使用前都会校验并限制大小。
-- 截图不会持久化到 DSH 存储；临时上传文件会在 CLI 进程结束后删除。
-- 插件不会修改已安装插件，也不会在用户明确确认前提交报告。
+---
 
-## 发布状态
+## 🔒 安全规范
 
-版本 `0.1.0` 是已获所有者批准、面向公开 GitHub 仓库和 npm 分发的 release candidate。
+* **凭据隔离**：OAuth Token 仅存于 DSH Credentials，绝不在 UI、URL、日志或 Issue 正文中明文暴露。
+* **数据脱敏**：自动过滤鉴权令牌、密码、内网地址、私有文件路径及邮箱。
+* **临时文件生命周期**：截图文件仅在临时目录暂存，`gh` 命令执行结束后立即物理删除。
+* **明确确认保护**：所有提交操作均需用户显式勾选确认，杜绝未经授权的隐式提交。
 
-## 许可证
+---
+
+## 📄 许可证
 
 MIT © [GooDAnDReaDY](https://github.com/GooDAnDReaDY)
