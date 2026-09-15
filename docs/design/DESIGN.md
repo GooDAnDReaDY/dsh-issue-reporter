@@ -28,7 +28,8 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 ## Trust boundaries
 
 - Plugin metadata is untrusted input and is validated before rendering.
-- Report text can contain secrets, private paths, URLs with credentials, and personal data; redaction is mandatory before preview and API calls.
+- Report text can contain secrets, private paths, URLs with credentials, personal data, LAN IPs, and session tokens; redaction is mandatory before preview and API calls.
+- In-progress report drafts are saved to `sessionStorage` and cleared upon confirmed issue submission to prevent accidental data loss.
 - GitHub and Gitea tokens never enter React state, settings snapshots, logs, URLs, or issue bodies.
 - Same-origin and loopback checks protect state-changing local routes and updater operations.
 - Autonomous agent tool calls cannot publish externally without `confirm_submit: true` and configured credentials.

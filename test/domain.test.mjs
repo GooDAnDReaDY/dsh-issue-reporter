@@ -54,14 +54,20 @@ test('categorizes native and third-party plugin packages', () => {
   assert.equal(pluginCategory('dsh-plugins-store'), 'third-party')
 })
 
-test('redacts credentials, private paths, urls and email addresses', () => {
-  const value = 'token: abc123 password=secret https://user:pass@example.test /home/alice/project a@b.example'
+test('redacts credentials, private paths, urls, emails, LAN IPs, JWTs and AI keys', () => {
+  const value = 'token: abc123 password=secret https://user:pass@example.test /home/alice/project a@b.example 192.168.1.111 10.0.0.50 AIzaSyD3x94jFl892Kls9_1204857682910 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlF2r1_6'
   const result = redactText(value)
   assert.equal(result.text.includes('secret'), false)
   assert.equal(result.text.includes('/home/alice'), false)
   assert.equal(result.text.includes('user:pass'), false)
   assert.equal(result.text.includes('a@b.example'), false)
-  assert.ok(result.redactions.length >= 3)
+  assert.equal(result.text.includes('192.168.1.111'), false)
+  assert.equal(result.text.includes('10.0.0.50'), false)
+  assert.equal(result.text.includes('AIzaSyD3x94jFl892Kls9_1204857682910'), false)
+  assert.equal(result.text.includes('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'), false)
+  assert.ok(result.redactions.includes('ip'))
+  assert.ok(result.redactions.includes('token'))
+  assert.ok(result.redactions.length >= 5)
 })
 
 test('composes a safe draft and prefilled issue link', () => {
