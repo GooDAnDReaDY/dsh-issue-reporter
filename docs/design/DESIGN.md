@@ -27,6 +27,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 
 ## Trust boundaries
 
+- Route authorization fails closed with HTTP 503 when the DSH connection service is missing or cannot evaluate the request.
 - Plugin metadata is untrusted input and is validated before rendering.
 - Report text can contain secrets, private paths, URLs with credentials, personal data, LAN IPs, and session tokens; redaction is mandatory before preview and API calls.
 - In-progress report drafts are saved to `sessionStorage` and cleared upon confirmed issue submission to prevent accidental data loss.
