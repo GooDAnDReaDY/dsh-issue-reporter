@@ -40,7 +40,8 @@
     "@deepseek-ai/cordis": "^4.0.2"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "prepack": "node scripts/build-client.mjs",
+    "test": "node scripts/build-client.mjs && node --test test/*.test.mjs"
   },
   "repository": {
     "type": "git",

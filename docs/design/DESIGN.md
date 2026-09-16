@@ -36,6 +36,13 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 - Autonomous agent tool calls cannot publish externally without `confirm_submit: true` and configured credentials.
 - Screenshot files are validated by extension, MIME type, count, and size before upload. They are not written to DSH storage or logs; temporary upload files are removed after the GitHub CLI process finishes.
 
+## Implementation boundaries
+
+- The settings-card client is authored as ordered modules in `src/client/`. `scripts/build-client.mjs` assembles them into the single-loader runtime entry at `lib/client.js`; tests and package prepack rebuild that artifact. Keep module responsibilities separated and avoid hand-editing the generated bundle.
+- Server routes are split by responsibility under `lib/routes/` and registered by `lib/index.js`. Write routes validate the request origin and method before changing state; route modules retain explicit HTTP method registration.
+- UI styles are installed once per plugin using the stable `data-dsh-plugin` marker, DSH theme tokens, and the core chevron primitive when available with a small SVG fallback. Locale changes subscribe to LocaleFace snapshots; do not call undocumented locale methods.
+- Errors are only converted into empty results for documented optional cases (for example, a missing issue template). Authorization, credentials, and remote API failures remain visible to the caller and are logged where a safe fallback is intentionally used.
+
 ## Localization
 
 English is the source locale. Chinese (zh) is required. User-facing Russian strings are intentionally not present in plugin runtime code; Russian localization belongs to the separate language plugin. Full documentation is provided in English, Russian, and Chinese.
