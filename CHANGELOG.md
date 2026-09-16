@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3
+
+- Hardened privacy redaction and report-draft persistence.
+- Failed closed when the DSH authorization guard is unavailable.
+- Fixed plugin settings, route error handling, and native DSH styling.
+- Refactored client and server routes into testable modules without changing the runtime bundle entry point.
+- Excluded internal planning and design files from the published package.
+
 ## 0.1.2
 
 - Registered autonomous `report_issue` tool in Cordis `ctx.tools` for agent-driven error triage and safe drafting (Refs: #28).
