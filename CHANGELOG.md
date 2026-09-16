@@ -9,6 +9,10 @@
 - Added smart auto-labeling and component detection via `/dsh-issue-reporter/labels` (Refs: #32).
 - Added canonical one-click plugin updater in settings card from npm registry with loopback validation (Refs: #33).
 
+- Added stable plugin style marker, theme-token styling, native chevron fallback, and reactive LocaleFace subscription (Refs: #42, #43, #44, #46).
+- Split client source and server route handlers into maintainable modules while preserving the single-loader runtime bundle (Ref: #45).
+- Surface authorization and upstream failures instead of silently reporting empty labels, templates, or credentials; reserve fallback behavior for documented optional cases (Ref: #47).
+
 ## 0.1.1
 
 - Brought reporter UI design and styling to the `dsh-clinebot` standard with `ensureCss()` and native DSH design tokens (Refs: #24).

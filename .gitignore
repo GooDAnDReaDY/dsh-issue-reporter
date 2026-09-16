@@ -1,5 +1,9 @@
 node_modules/
 .worktrees/
+/.planning/
+/docs/plans/
+/AGENTS.md
+/index.md
 *.tgz
 .DS_Store
 *.log
