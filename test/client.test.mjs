@@ -5,7 +5,7 @@ import test from 'node:test'
 
 const clientSource = readFileSync(new URL('../lib/client.js', import.meta.url), 'utf8')
 
-function createFixture({ primitive } = {}) {
+function createFixture({ primitive, fetchImpl } = {}) {
   const state = []
   const refs = []
   let stateIndex = 0
@@ -51,6 +51,7 @@ function createFixture({ primitive } = {}) {
     window: { __ModuleLoader__: { load(record) { moduleRecord = record } } },
     document,
     console,
+    fetch: fetchImpl || (async () => ({ ok: true, status: 200, json: async () => ({}) })),
     setTimeout,
     clearTimeout,
   })
@@ -148,4 +149,50 @@ test('client uses the core Chevron when present and its SVG fallback otherwise',
   const coreTree = coreFixture.render()
   const coreToggle = findElement(coreTree, (node) => String(node.props?.className || '').startsWith('ir-chevron'))
   assert.equal(coreToggle.children[0].type, CoreChevron)
+})
+
+test('client references only theme tokens supported by DSH 0.1.6', () => {
+  const supportedTokens = new Set([
+    '--dsw-alias-bg-layer-1',
+    '--dsw-alias-bg-layer-2',
+    '--dsw-alias-bg-layer-3',
+    '--dsw-alias-bg-mask-1',
+    '--dsw-alias-border-l1',
+    '--dsw-alias-border-l2',
+    '--dsw-alias-interactive-bg-hover',
+    '--dsw-alias-label-primary',
+    '--dsw-alias-label-primary-inverted',
+    '--dsw-alias-label-secondary',
+    '--dsw-alias-label-tertiary',
+    '--dsw-alias-state-business-primary',
+    '--dsw-alias-state-error-primary',
+    '--dsw-alias-state-success-primary',
+    '--dsw-alias-state-warn-label',
+    '--dsw-alias-state-warn-primary',
+  ])
+  const referencedTokens = new Set(clientSource.match(/--dsw-alias-[\w-]+/g) || [])
+  assert.deepEqual([...referencedTokens].filter((token) => !supportedTokens.has(token)), [])
+})
+
+test('updater distinguishes HTTP failures from network failures', async () => {
+  async function getNotice(fetchImpl) {
+    const fixture = createFixture({ fetchImpl })
+    fixture.render()
+    fixture.effects[3]()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    const disclosure = findElement(fixture.render(), (node) => node.props?.['aria-expanded'] === false)
+    disclosure.props.onClick()
+    return textContent(fixture.render())
+  }
+
+  const networkNotice = await getNotice(async () => { throw new TypeError('fetch failed') })
+  assert.match(networkNotice, /Could not check for plugin updates\./)
+  assert.doesNotMatch(networkNotice, /HTTP \d+/)
+
+  const httpNotice = await getNotice(async () => ({
+    ok: false,
+    status: 401,
+    json: async () => ({ error: 'Unauthorized' }),
+  }))
+  assert.match(httpNotice, /Could not check for plugin updates\. \(HTTP 401\)/)
 })

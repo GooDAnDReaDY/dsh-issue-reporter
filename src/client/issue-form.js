@@ -148,7 +148,7 @@
               h('h4', { style: { margin: '8px 0', fontSize: 16 } }, preview.draft.title),
               h('pre', { className: 'ir-preview' }, preview.draft.body || '-'),
               preview.draft.redactions.length
-                ? h('div', { style: { marginTop: 8, fontSize: 12, color: 'var(--dsw-alias-state-warning-primary)' } }, '🛡️ ' + t.redactions + ': ' + preview.draft.redactions.join(', '))
+                ? h('div', { style: { marginTop: 8, fontSize: 12, color: 'var(--dsw-alias-state-warn-primary)' } }, '🛡️ ' + t.redactions + ': ' + preview.draft.redactions.join(', '))
                 : null,
               selectedLabels.length
                 ? h('p', { style: { fontSize: 13, marginTop: 6 } }, t.labels + ': ' + selectedLabels.join(', '))

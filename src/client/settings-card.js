@@ -79,8 +79,10 @@
         try {
           const res = await jsonRequest('/dsh-issue-reporter/update')
           if (res) setUpdater(res)
-        } catch {
-          setUpdateNotice(t.updateCheckFailed)
+        } catch (reason) {
+          setUpdateNotice(Number.isInteger(reason?.status)
+            ? t.updateCheckFailed + ' (HTTP ' + reason.status + ')'
+            : t.updateCheckFailed)
           setUpdateNoticeError(true)
         }
       }, [t])

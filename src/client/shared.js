@@ -25,7 +25,10 @@
           const snapshot = ctx?.locale?.getSnapshot?.()
           const current = snapshot?.active || ctx?.locale?.getLocale?.()
           return typeof current === 'string' ? current : 'en'
-        } catch (error) { return 'en' }
+        } catch (error) {
+          ignoreOptionalFailure(ctx, 'Locale snapshot lookup')
+          return 'en'
+        }
       }
       const [locale, setLocale] = React.useState(readLocale)
       React.useEffect(() => {
@@ -34,7 +37,10 @@
         try {
           update()
           return ctx.locale.subscribe(update)
-        } catch (error) { return undefined }
+        } catch (error) {
+          ignoreOptionalFailure(ctx, 'Locale subscription')
+          return undefined
+        }
       }, [ctx])
       return locale
     }
@@ -55,7 +61,11 @@
         if (res.ok) throw new Error('Server returned invalid JSON')
         return {}
       })
-      if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status)
+      if (!res.ok) {
+        const error = new Error(data.error || 'HTTP ' + res.status)
+        error.status = res.status
+        throw error
+      }
       return data
     }
 
