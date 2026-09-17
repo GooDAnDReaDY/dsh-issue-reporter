@@ -77,10 +77,10 @@ test('composeIssueDraft includes labels and redacts sensitive data', () => {
 
 test('composeIssueDraft redacts LAN IP and JWT in issue body', () => {
   const draft = composeIssueDraft({
-    title: 'Connection error to 192.168.1.111',
+    title: 'Connection error to 10.23.45.67',
     observed: 'Failed to contact host at 10.0.1.25 with token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlF2r1_6',
   })
-  assert.equal(draft.title.includes('192.168.1.111'), false)
+  assert.equal(draft.title.includes('10.23.45.67'), false)
   assert.equal(draft.body.includes('10.0.1.25'), false)
   assert.equal(draft.body.includes('eyJhbGci'), false)
   assert.ok(draft.redactions.includes('ip'))
