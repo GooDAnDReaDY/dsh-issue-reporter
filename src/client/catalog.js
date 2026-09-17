@@ -7,7 +7,7 @@
     const isConnected = Boolean(status?.config?.tokenConfigured)
     const badges = h('div', { className: 'ir-badges-row' }, [
       updater?.currentVersion ? h('span', { className: 'ir-badge ir-badge-neutral' }, 'v' + updater.currentVersion) : null,
-      updater?.updateAvailable ? h('span', { className: 'ir-badge ir-badge-warn' }, '⬆ v' + updater.latestVersion) : null,
+      updater?.updateAvailable ? h('span', { className: 'ir-badge ir-badge-warn' }, 'v' + updater.latestVersion) : null,
       isConnected
         ? h('span', { className: 'ir-badge ir-badge-ok' }, '✓ ' + t.connected)
         : h('span', { className: 'ir-badge ir-badge-warn' }, status?.config?.signInConfigured ? t.authRequired : t.authUnavailable),

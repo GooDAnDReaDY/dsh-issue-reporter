@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.4
+
+### English
+- Fixed native DSH theme-token compatibility and plugin inventory interactions.
+- Fixed report-editor session-log loading and improved updater error diagnostics.
+- Added regression coverage for plugin-card behavior, theme styling, session logs, and updater failures.
+
+### 中文
+- 修复原生 DSH 主题令牌兼容性及插件清单交互问题。
+- 修复报告编辑器的会话日志加载，并改进更新器错误诊断。
+- 增加回归测试，覆盖插件卡片、主题样式、会话日志和更新失败处理。
+
+### Русский
+- Исправлена совместимость с токенами темы DSH и взаимодействие с каталогом плагинов.
+- Исправлена загрузка журналов сессии в редакторе отчёта и улучшена диагностика ошибок обновления.
+- Добавлены регрессионные проверки карточки плагина, темы, журналов сессии и ошибок обновления.
+
 ## 0.1.3
 
 - Hardened privacy redaction and report-draft persistence.

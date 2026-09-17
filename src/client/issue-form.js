@@ -1,4 +1,4 @@
-    function renderIssueEditor({ h, Field, t, editor, editorMode, setEditorMode, draft, setDraft, availableLabels, selectedLabels, setSelectedLabels, logsOpen, insertSelectedLogs, logsLoading, availableLogs, selectedLogs, setSelectedLogs, aiNotice, dropzone, handleAiOptimize, aiBusy, busy, buildPreview, preview, reviewed, setReviewed, includeClosed, setIncludeClosed, duplicates, status, createIssue, attachments, locale }) {
+    function renderIssueEditor({ h, Field, t, editor, editorMode, setEditorMode, draft, setDraft, availableLabels, selectedLabels, setSelectedLabels, logsOpen, fetchLogs, insertSelectedLogs, logsLoading, availableLogs, selectedLogs, setSelectedLogs, aiNotice, dropzone, handleAiOptimize, aiBusy, busy, buildPreview, preview, reviewed, setReviewed, includeClosed, setIncludeClosed, duplicates, status, createIssue, attachments, locale }) {
     const editorContent = editor ? h('div', { className: 'ir-section-card' }, [
       h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--dsw-alias-border-l2)', paddingBottom: 10 } }, [
         h('div', null, [
@@ -68,7 +68,7 @@
               }
             }, [
               h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 } }, [
-                h('strong', { style: { fontSize: 13 } }, '📋 ' + t.recentLogs),
+                h('strong', { style: { fontSize: 13 } }, t.recentLogs),
                 h('div', { style: { display: 'flex', gap: 6 } }, [
                   h('button', {
                     type: 'button',
@@ -127,13 +127,13 @@
                   className: 'ir-btn',
                   onClick: handleAiOptimize,
                   disabled: busy || aiBusy || (!draft.observed.trim() && !draft.reproduction.trim()),
-                }, aiBusy ? t.aiOptimizing : '✨ ' + t.aiOptimize),
+                }, aiBusy ? t.aiOptimizing : t.aiOptimize),
                 h('button', {
                   type: 'button',
                   className: 'ir-btn',
                   onClick: fetchLogs,
                   disabled: busy,
-                }, '📋 ' + t.fetchLogs),
+                }, t.fetchLogs),
               ]),
               h('button', {
                 type: 'button',
@@ -148,7 +148,7 @@
               h('h4', { style: { margin: '8px 0', fontSize: 16 } }, preview.draft.title),
               h('pre', { className: 'ir-preview' }, preview.draft.body || '-'),
               preview.draft.redactions.length
-                ? h('div', { style: { marginTop: 8, fontSize: 12, color: 'var(--dsw-alias-state-warning-primary)' } }, '🛡️ ' + t.redactions + ': ' + preview.draft.redactions.join(', '))
+                ? h('div', { style: { marginTop: 8, fontSize: 12, color: 'var(--dsw-alias-state-warn-primary)' } }, t.redactions + ': ' + preview.draft.redactions.join(', '))
                 : null,
               selectedLabels.length
                 ? h('p', { style: { fontSize: 13, marginTop: 6 } }, t.labels + ': ' + selectedLabels.join(', '))
