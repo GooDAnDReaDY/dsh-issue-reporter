@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3
+
+- Hardened privacy redaction and report-draft persistence.
+- Failed closed when the DSH authorization guard is unavailable.
+- Fixed plugin settings, route error handling, and native DSH styling.
+- Refactored client and server routes into testable modules without changing the runtime bundle entry point.
+- Excluded internal planning and design files from the published package.
+
 ## 0.1.2
 
 - Registered autonomous `report_issue` tool in Cordis `ctx.tools` for agent-driven error triage and safe drafting (Refs: #28).
@@ -8,6 +16,10 @@
 - Added issue watcher with batch status polling via `/dsh-issue-reporter/issues/batch-status` (Refs: #31).
 - Added smart auto-labeling and component detection via `/dsh-issue-reporter/labels` (Refs: #32).
 - Added canonical one-click plugin updater in settings card from npm registry with loopback validation (Refs: #33).
+
+- Added stable plugin style marker, theme-token styling, native chevron fallback, and reactive LocaleFace subscription (Refs: #42, #43, #44, #46).
+- Split client source and server route handlers into maintainable modules while preserving the single-loader runtime bundle (Ref: #45).
+- Surface authorization and upstream failures instead of silently reporting empty labels, templates, or credentials; reserve fallback behavior for documented optional cases (Ref: #47).
 
 ## 0.1.1
 

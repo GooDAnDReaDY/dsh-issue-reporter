@@ -27,12 +27,21 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 
 ## Trust boundaries
 
+- Route authorization fails closed with HTTP 503 when the DSH connection service is missing or cannot evaluate the request.
 - Plugin metadata is untrusted input and is validated before rendering.
-- Report text can contain secrets, private paths, URLs with credentials, and personal data; redaction is mandatory before preview and API calls.
+- Report text can contain secrets, private paths, URLs with credentials, personal data, LAN IPs, and session tokens; redaction is mandatory before preview and API calls.
+- In-progress report drafts are saved to `sessionStorage` and cleared upon confirmed issue submission to prevent accidental data loss.
 - GitHub and Gitea tokens never enter React state, settings snapshots, logs, URLs, or issue bodies.
 - Same-origin and loopback checks protect state-changing local routes and updater operations.
 - Autonomous agent tool calls cannot publish externally without `confirm_submit: true` and configured credentials.
 - Screenshot files are validated by extension, MIME type, count, and size before upload. They are not written to DSH storage or logs; temporary upload files are removed after the GitHub CLI process finishes.
+
+## Implementation boundaries
+
+- The settings-card client is authored as ordered modules in `src/client/`. `scripts/build-client.mjs` assembles them into the single-loader runtime entry at `lib/client.js`; tests and package prepack rebuild that artifact. Keep module responsibilities separated and avoid hand-editing the generated bundle.
+- Server routes are split by responsibility under `lib/routes/` and registered by `lib/index.js`. Write routes validate the request origin and method before changing state; route modules retain explicit HTTP method registration.
+- UI styles are installed once per plugin using the stable `data-dsh-plugin` marker, DSH theme tokens, and the core chevron primitive when available with a small SVG fallback. Locale changes subscribe to LocaleFace snapshots; do not call undocumented locale methods.
+- Errors are only converted into empty results for documented optional cases (for example, a missing issue template). Authorization, credentials, and remote API failures remain visible to the caller and are logged where a safe fallback is intentionally used.
 
 ## Localization
 
