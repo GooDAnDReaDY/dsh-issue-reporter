@@ -200,3 +200,10 @@ test('updater distinguishes HTTP failures from network failures', async () => {
 test('client UI contains no decorative pictographic emoji', () => {
   assert.doesNotMatch(clientSource, /\p{Extended_Pictographic}/u)
 })
+
+test('report editor receives its log-fetch callback', () => {
+  const signature = clientSource.match(/function renderIssueEditor\(\{([^}]*)\}\)/)?.[1] || ''
+  const invocation = clientSource.match(/const editorContent = renderIssueEditor\(\{([^}]*)\}\)/)?.[1] || ''
+  assert.match(signature, /\bfetchLogs\b/)
+  assert.match(invocation, /\bfetchLogs\b/)
+})
