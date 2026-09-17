@@ -41,7 +41,10 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 - The settings-card client is authored as ordered modules in `src/client/`. `scripts/build-client.mjs` assembles them into the single-loader runtime entry at `lib/client.js`; tests and package prepack rebuild that artifact. Keep module responsibilities separated and avoid hand-editing the generated bundle.
 - Server routes are split by responsibility under `lib/routes/` and registered by `lib/index.js`. Write routes validate the request origin and method before changing state; route modules retain explicit HTTP method registration.
 - UI styles are installed once per plugin using the stable `data-dsh-plugin` marker, DSH theme tokens, and the core chevron primitive when available with a small SVG fallback. Locale changes subscribe to LocaleFace snapshots; do not call undocumented locale methods.
+- User-facing labels use localized text and DSH primitives rather than decorative emoji.
+- Every referenced DSH theme token must exist in the supported core theme-token set; tests scan the generated client bundle for unknown token names.
 - Errors are only converted into empty results for documented optional cases (for example, a missing issue template). Authorization, credentials, and remote API failures remain visible to the caller and are logged where a safe fallback is intentionally used.
+- Updater failures distinguish network errors from HTTP responses, preserving the localized message and showing the HTTP status when the server returned a non-success response.
 
 ## Localization
 

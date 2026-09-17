@@ -12,7 +12,7 @@
       .ir-tab-btn { padding: 6px 14px; background: transparent; border: 0; border-bottom: 2px solid transparent; color: var(--dsw-alias-label-secondary); font-size: 13px; font-weight: 500; cursor: pointer; }
       .ir-tab-btn.active { color: var(--dsw-alias-label-primary); border-bottom-color: var(--dsw-alias-state-business-primary); font-weight: 600; }
       .ir-btn { display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; font-size: 13px; font-weight: 500; border-radius: 6px; border: 1px solid var(--dsw-alias-border-l1); background: var(--dsw-alias-bg-layer-3); color: var(--dsw-alias-label-primary); cursor: pointer; text-decoration: none; transition: background-color 0.15s; }
-      .ir-btn:hover:not(:disabled) { background: var(--dsw-alias-bg-layer-4); }
+      .ir-btn:hover:not(:disabled) { background: var(--dsw-alias-interactive-bg-hover); }
       .ir-btn:disabled { opacity: 0.5; cursor: not-allowed; }
       .ir-btn-primary { background: var(--dsw-alias-state-business-primary); color: var(--dsw-alias-label-primary-inverted); border-color: transparent; }
       .ir-btn-primary:hover:not(:disabled) { background: color-mix(in srgb, var(--dsw-alias-state-business-primary) 88%, var(--dsw-alias-label-primary)); }
