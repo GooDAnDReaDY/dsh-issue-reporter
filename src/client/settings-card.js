@@ -485,7 +485,7 @@
           }
         }, [
           h('div', null, [
-            h('strong', null, '🚀 ' + t.updateAvailable + ': '),
+            h('strong', null, t.updateAvailable + ': '),
             ' v' + updater.currentVersion + ' → v' + updater.latestVersion,
           ]),
           h('button', {

@@ -23,7 +23,7 @@
         },
       }),
       h('div', { className: 'ir-dropzone-text' }, [
-        h('strong', { style: { display: 'block', marginBottom: 4 } }, '📸 ' + t.attachments),
+        h('strong', { style: { display: 'block', marginBottom: 4 } }, t.attachments),
         h('span', null, t.dropzonePrompt),
       ]),
       attachments.length ? h('div', { className: 'ir-thumbs-grid', onClick: (e) => e.stopPropagation() },

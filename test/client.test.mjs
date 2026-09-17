@@ -196,3 +196,7 @@ test('updater distinguishes HTTP failures from network failures', async () => {
   }))
   assert.match(httpNotice, /Could not check for plugin updates\. \(HTTP 401\)/)
 })
+
+test('client UI contains no decorative pictographic emoji', () => {
+  assert.doesNotMatch(clientSource, /\p{Extended_Pictographic}/u)
+})
