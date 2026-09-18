@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.5
+
+### English
+- **Settings reachable again**: the card registered into `settings.plugin.item`, a
+  slot the current DSH core (0.1.6-alpha.2) no longer renders, so the settings were
+  unreachable. The surface now registers into the Plugins page row seat
+  `plugins.row.config`, keyed `@goodandready/dsh-issue-reporter#dsh-issue-reporter`
+  (`rowConfigKey(package, rowId)`): the row gains a configure control whose page is
+  the settings form (`view: 'page'`, without our card chrome and header — the host
+  page draws the title, icon, crumb and padding) plus a one-line state for
+  `view: 'summary'`. The legacy seat stays registered as a fallback for older cores.
+
 ## 0.1.4
 
 ### English
