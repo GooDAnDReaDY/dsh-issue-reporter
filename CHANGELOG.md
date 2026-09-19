@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.6
+
+### English
+- **Settings reachable again on the plugin's own page**: the current DSH core
+  (0.1.6-alpha.2) renders a plugin's configuration page only for entries registered
+  in the plugin-list seat `plugins.item` — that is how `dsh-agentrouter` and
+  `dsh-agent-orchestrator` show their settings. The view-aware card is now registered
+  there too (`id: 'dsh-issue-reporter'`, order 60, static label); the legacy
+  `settings.plugin.item` seat stays as a fallback.
+- The card became view-aware: `summary` is a one-liner, `page` renders bare and open
+  (`ir-seat-page`) instead of inside the card frame.
+
+### Русский
+- **Настройки снова доступны на странице плагина**: текущее ядро 0.1.6-alpha.2
+  рендерит страницу настроек плагина только для записей в списочном слоте
+  `plugins.item`. Карточка зарегистрирована там (`id: 'dsh-issue-reporter'`,
+  order 60, статичный label), легаси-посадка оставлена фолбэком.
+- Карточка стала view-aware: `summary` — однострочник, `page` — форма без нашей
+  рамки и раскрытая.
+
 ## 0.1.5
 
 ### English

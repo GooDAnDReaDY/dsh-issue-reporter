@@ -1,4 +1,5 @@
-    function SettingsCardInner({ ctx }) {
+    function SettingsCardInner(props) {
+      const { ctx } = props
       ensureCss()
       const locale = useLocale(ctx)
       const t = locale.startsWith('zh') ? zh : en
@@ -469,7 +470,12 @@
 
       const authContent = renderAuthorization({ h, t, status, startAuth, busy, auth, copyCode, copied, signOut })
 
-      const body = open ? h('div', { className: 'ir-page' }, [
+      // Plugins page seats: the host's plugin page draws the title, icon, crumb and
+      // padding itself, so the page view renders bare and open, while the summary view
+      // is a one-liner. Computed before the body so the body can honour it.
+      const page = !!(props && props.view === 'page')
+
+      const body = (open || page) ? h('div', { className: 'ir-page' }, [
         // One-click update banner
         updater?.updateAvailable ? h('div', {
           style: {
@@ -517,14 +523,17 @@
       ]) : null
 
       const cardBodyId = NS + '-body'
-      return h('li', { style: { listStyle: 'none', padding: 14, borderRadius: 12, border: '1px solid var(--dsw-alias-border-l1)', background: 'var(--dsw-alias-bg-layer-2)', marginBottom: 12 } },
+      if (props && props.view === 'summary') {
+        return h('p', { className: 'ir-sub', style: { margin: 0 } }, t.description)
+      }
+      return h(page ? 'div' : 'li', { className: page ? 'ir-seat-page' : undefined, style: page ? undefined : { listStyle: 'none', padding: 14, borderRadius: 12, border: '1px solid var(--dsw-alias-border-l1)', background: 'var(--dsw-alias-bg-layer-2)', marginBottom: 12 } },
         h('button', {
           type: 'button',
           onClick: () => setOpen(!open),
-          'aria-expanded': open,
+          'aria-expanded': page ? true : open,
           'aria-controls': cardBodyId,
           style: {
-            display: 'flex',
+            display: page ? 'none' : 'flex',
             justifyContent: 'space-between',
             gap: 12,
             alignItems: 'center',
@@ -547,7 +556,7 @@
             h(Chevron)
           ),
         ]),
-        body ? h('div', { id: cardBodyId, style: { marginTop: 12 } }, body) : null
+        body ? h('div', { id: cardBodyId, style: page ? undefined : { marginTop: 12 } }, body) : null
       )
     }
 
@@ -562,6 +571,19 @@
         }
         return () => {}
       }, 'dsh-issue-reporter: dictionaries')
+      // List seat (plugins.item): the seat the Plugins page renders as the plugin's own
+      // page with its configuration. The label is a static string on purpose — it is
+      // resolved while the page renders, and a locale lookup there would take the whole
+      // client batch down with it.
+      ctx.slots.inject('plugins.item', () => ctx.slots.register({
+          name: 'plugins.item',
+          id: 'dsh-issue-reporter',
+          order: 60,
+          label: () => 'Issue Reporter',
+          locale: NS,
+          inject: () => ({ ctx }),
+        }, (props) => h(SettingsCard, { ...props, ctx })))
+      // Legacy seat kept as a fallback.
       ctx.slots.inject('settings.plugin.item', () => ctx.slots.register({
           name: 'settings.plugin.item',
           key: NS,
