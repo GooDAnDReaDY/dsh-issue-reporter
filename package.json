@@ -1,6 +1,6 @@
 {
   "name": "@goodandready/dsh-issue-reporter",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Preview and submit actionable GitHub bug reports from DeepSeek Harness",
   "license": "MIT",
   "type": "module",
