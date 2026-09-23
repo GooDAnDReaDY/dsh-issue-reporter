@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.7
+
+### English
+- **Network Request Safety**: added default 15-second operation timeout (`DEFAULT_TIMEOUT_MS = 15_000`) across all GitHub and Gitea REST API calls in `lib/github.js`. Prevents server route handlers and worker threads from hanging indefinitely when remote forge connections stall or drop packets.
+- **Batch Status Throttling & Caching**: capped concurrency in `/dsh-issue-reporter/issues/batch-status` to batches of 4 requests (down from 20 parallel requests), and added in-memory LRU/TTL caching (60s) to prevent secondary rate limits and redundant forge round-trips.
+- **Dead Code Pruning**: cleanly removed the uncalled `/dsh-issue-reporter/templates` endpoint and `fetchIssueTemplates` method per YAGNI, reducing bundle complexity without affecting structured issue drafting.
+- **Repository Hygiene**: completed verification and cleanup of 16 historical task worktrees and codified worktree lifecycle boundaries in `DESIGN.md`.
+
+### Русский
+- **Безопасность сетевых вызовов**: добавлен таймаут по умолчанию 15 секунд (`DEFAULT_TIMEOUT_MS = 15_000`) для всех вызовов к REST API GitHub и Gitea в `lib/github.js`. Исключено зависание обработчиков маршрутов и рабочих потоков DSH при сбоях сети или зависании удалённых сервисов.
+- **Троттлинг и кэширование пакетного опроса**: опрос статусов тикетов в `/issues/batch-status` ограничен параллельными батчами по 4 запроса (вместо 20 одновременных вызовов), добавлен in-memory TTL-кэш (60 секунд) для защиты от вторичных rate limits и избыточных повторных запросов.
+- **Удаление мёртвого кода**: удалены неиспользуемый эндпоинт `/templates` и метод `fetchIssueTemplates` по правилу YAGNI (Ponytail).
+- **Чистота репозитория**: проведена верификация и очистка 16 устаревших worktree завершённых задач с закреплением инварианта в `DESIGN.md`.
+
+### 中文
+- **网络请求安全性**：在 `lib/github.js` 中为所有 GitHub 和 Gitea REST API 调用添加了默认 15 秒操作超时（`DEFAULT_TIMEOUT_MS = 15_000`）。防止在网络连接中断或远端服务挂起时无限期阻塞 DSH 路由处理器。
+- **批量状态限流与缓存**：将 `/dsh-issue-reporter/issues/batch-status` 中的并发请求限制为每批 4 个请求（从 20 个并发请求下调），并添加内存 LRU/TTL 缓存（60 秒），防止触发次级速率限制和不必要的重复请求。
+- **清理死代码**：根据 YAGNI 原则完全移除了未被调用的 `/dsh-issue-reporter/templates` 端点和 `fetchIssueTemplates` 方法，精简代码库。
+- **仓库维护**：完成并清理了 16 个已合并的历史任务工作树，并在 `DESIGN.md` 中固化了工作树生命周期规范。
+
 ## 0.1.6
 
 ### English
