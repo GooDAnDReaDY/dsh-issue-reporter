@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { GitHubApiError } from '../lib/github.js'
 import { registerRoutes as registerCoreRoutes } from '../lib/routes/core.js'
-import { registerRoutes as registerReportRoutes } from '../lib/routes/reports.js'
+import { registerRoutes as registerReportRoutes, _clearIssueStatusCache } from '../lib/routes/reports.js'
 import { registerRoutes as registerCreateRoute } from '../lib/routes/create.js'
 import { registerRoutes as registerAgentTool } from '../lib/routes/agent-tool.js'
 
@@ -74,3 +74,67 @@ test('label lookup surfaces remote authorization errors instead of disguising th
   assert.equal(res.payload.error, 'Bad credentials')
 })
 
+
+test('batch-status throttles concurrency and returns issue statuses in order', async () => {
+  _clearIssueStatusCache()
+  let activeCalls = 0
+  let maxConcurrent = 0
+  const items = Array.from({ length: 9 }, (_, i) => ({
+    repository: 'https://github.com/acme/widget',
+    number: i + 1,
+  }))
+  const fixture = setup(serviceDefaults({
+    readJson: async () => ({ items }),
+    parseForgeRepository: () => ({ forge: 'github', owner: 'acme', repo: 'widget' }),
+    parseIssueState: (data) => data,
+    apiFor: () => ({
+      getIssue: async (_owner, _repo, number) => {
+        activeCalls += 1
+        if (activeCalls > maxConcurrent) maxConcurrent = activeCalls
+        await new Promise((r) => setTimeout(r, 10))
+        activeCalls -= 1
+        return { number, state: 'open', comments: 0 }
+      },
+    }),
+  }))
+  registerReportRoutes(fixture.ctx, fixture.config, fixture.services)
+  const res = response()
+  await fixture.routes.get('/dsh-issue-reporter/issues/batch-status').handler({ method: 'POST' }, res)
+
+  assert.equal(res.status, 200)
+  assert.equal(res.payload.ok, true)
+  assert.equal(res.payload.statuses.length, 9)
+  assert.equal(res.payload.statuses[0].number, 1)
+  assert.equal(res.payload.statuses[8].number, 9)
+  assert.ok(maxConcurrent <= 4, `Expected max concurrency <= 4, got ${maxConcurrent}`)
+})
+
+test('batch-status caches issue status results within TTL', async () => {
+  _clearIssueStatusCache()
+  let networkCalls = 0
+  const items = [{ repository: 'https://github.com/acme/widget', number: 42 }]
+  const fixture = setup(serviceDefaults({
+    readJson: async () => ({ items }),
+    parseForgeRepository: () => ({ forge: 'github', owner: 'acme', repo: 'widget' }),
+    parseIssueState: (data) => data,
+    apiFor: () => ({
+      getIssue: async (_owner, _repo, number) => {
+        networkCalls += 1
+        return { number, state: 'closed', comments: 3 }
+      },
+    }),
+  }))
+  registerReportRoutes(fixture.ctx, fixture.config, fixture.services)
+
+  const res1 = response()
+  await fixture.routes.get('/dsh-issue-reporter/issues/batch-status').handler({ method: 'POST' }, res1)
+  assert.equal(res1.status, 200)
+  assert.equal(networkCalls, 1)
+  assert.equal(res1.payload.statuses[0].state, 'closed')
+
+  const res2 = response()
+  await fixture.routes.get('/dsh-issue-reporter/issues/batch-status').handler({ method: 'POST' }, res2)
+  assert.equal(res2.status, 200)
+  assert.equal(networkCalls, 1) // Cached!
+  assert.equal(res2.payload.statuses[0].state, 'closed')
+})
