@@ -139,3 +139,42 @@ test('github searchIssues supports state parameter', async () => {
   await client.searchIssues('acme', 'widget', 'login', 'closed')
   assert.match(calls[0].url, /is%3Aclosed/)
 })
+
+test('github and gitea clients apply default timeout signal to requests', async () => {
+  let ghSignal
+  const ghClient = createGitHubClient({
+    fetchImpl: async (url, options) => {
+      ghSignal = options.signal
+      return response(200, { items: [] })
+    },
+  })
+  await ghClient.searchIssues('acme', 'widget', 'bug')
+  assert.ok(ghSignal instanceof AbortSignal, 'GitHub request must include an AbortSignal')
+  assert.equal(ghSignal.aborted, false)
+
+  let giteaSignal
+  const giteaClient = createGiteaClient({
+    baseUrl: 'https://gitea.example.com',
+    fetchImpl: async (url, options) => {
+      giteaSignal = options.signal
+      return response(200, { username: 'gitea-user' })
+    },
+  })
+  await giteaClient.currentUser()
+  assert.ok(giteaSignal instanceof AbortSignal, 'Gitea request must include an AbortSignal')
+  assert.equal(giteaSignal.aborted, false)
+})
+
+test('caller-provided signal overrides default timeout signal', async () => {
+  const customController = new AbortController()
+  let capturedSignal
+  const ghClient = createGitHubClient({
+    signal: customController.signal,
+    fetchImpl: async (url, options) => {
+      capturedSignal = options.signal
+      return response(200, { items: [] })
+    },
+  })
+  await ghClient.currentUser()
+  assert.equal(capturedSignal, customController.signal)
+})
