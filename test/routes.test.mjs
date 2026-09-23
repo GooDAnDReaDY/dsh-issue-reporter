@@ -58,7 +58,6 @@ test('route modules preserve all HTTP endpoints and the optional agent tool', ()
     '/dsh-issue-reporter/labels',
     '/dsh-issue-reporter/logs',
     '/dsh-issue-reporter/status',
-    '/dsh-issue-reporter/templates',
   ])
   assert.deepEqual(fixture.tools.map((tool) => tool.name), ['report_issue'])
 })
@@ -75,22 +74,3 @@ test('label lookup surfaces remote authorization errors instead of disguising th
   assert.equal(res.payload.error, 'Bad credentials')
 })
 
-test('missing issue templates stay an empty optional result, while other failures remain visible', async () => {
-  const fixture = setup(serviceDefaults({
-    apiFor: () => ({ fetchIssueTemplates: async () => { throw new GitHubApiError('Not Found', 404, {}) } }),
-  }))
-  registerCoreRoutes(fixture.ctx, fixture.config, fixture.services)
-  const res = response()
-  await fixture.routes.get('/dsh-issue-reporter/templates').handler({ method: 'POST' }, res)
-  assert.equal(res.status, 200)
-  assert.deepEqual(res.payload.templates, [])
-
-  const forbiddenFixture = setup(serviceDefaults({
-    apiFor: () => ({ fetchIssueTemplates: async () => { throw new GitHubApiError('Forbidden', 403, {}) } }),
-  }))
-  registerCoreRoutes(forbiddenFixture.ctx, forbiddenFixture.config, forbiddenFixture.services)
-  const failed = response()
-  await forbiddenFixture.routes.get('/dsh-issue-reporter/templates').handler({ method: 'POST' }, failed)
-  assert.equal(failed.status, 403)
-  assert.equal(failed.payload.ok, false)
-})
