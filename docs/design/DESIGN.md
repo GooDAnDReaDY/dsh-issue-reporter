@@ -45,6 +45,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 - Every referenced DSH theme token must exist in the supported core theme-token set; tests scan the generated client bundle for unknown token names.
 - Errors are only converted into empty results for documented optional cases (for example, a missing issue template). Authorization, credentials, and remote API failures remain visible to the caller and are logged where a safe fallback is intentionally used.
 - Updater failures distinguish network errors from HTTP responses, preserving the localized message and showing the HTTP status when the server returned a non-success response.
+- Development work occurs only in dedicated worktrees under `.worktrees/<branch>`; completed task worktrees are verified as ancestors of `origin/main` and pruned promptly to maintain a clean repository tree.
 
 ## Localization
 
