@@ -20,7 +20,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 2. The host enriches module names from package metadata, categorizes package names, and returns only validated GitHub or Gitea repository targets.
 3. Device Flow runs against a GitHub OAuth App without a client secret and requests the repo scope: code and token requests use the GitHub web OAuth host (`github.com`), while repository and user API calls use the configured REST API host (`api.github.com` by default). The host stores returned OAuth material in DSH Credentials under the installation-configured reference.
 4. Draft text is redacted and composed locally/host-side. Duplicate search is read-only.
-5. AI Optimization (`/dsh-issue-reporter/ai/optimize`) integrates with `ctx.llm` when available or formats structured Markdown drafts.
+5. AI Optimization (`/dsh-issue-reporter/ai/optimize`) redacts all user-supplied input fields (observed, reproduction, expected, environment, error stacks, diagnostics) before constructing prompts, invokes `ctx.llm` with sanitized messages, and ensures returned model responses are sanitized before delivery, with a fully redacted heuristic fallback.
 6. Session Logs (`/dsh-issue-reporter/logs`) extracts sanitized lines from the harness session log service.
 7. Issue Watcher (`/dsh-issue-reporter/issues/batch-status`) queries repository issues in batch and updates ticket states.
 8. One-click updater (`/dsh-issue-reporter/update`) runs safely on loopback with `x-dsh-plugin-update: 1` header, installing the exact npm package version via `dsh plugin add`.
@@ -30,6 +30,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 - Route authorization fails closed with HTTP 503 when the DSH connection service is missing or cannot evaluate the request.
 - Plugin metadata is untrusted input and is validated before rendering.
 - Report text can contain secrets, private paths, URLs with credentials, personal data, LAN IPs, and session tokens; redaction is mandatory before preview and API calls.
+- AI draft optimization (`/dsh-issue-reporter/ai/optimize`) must never send raw credentials, tokens, filesystem paths, internal LAN IPs, or user data to external LLM providers; prompt construction enforces host-side redaction across all parameters.
 - In-progress report drafts are saved to `sessionStorage` and cleared upon confirmed issue submission to prevent accidental data loss.
 - GitHub and Gitea tokens never enter React state, settings snapshots, logs, URLs, or issue bodies.
 - Same-origin and loopback checks protect state-changing local routes and updater operations.

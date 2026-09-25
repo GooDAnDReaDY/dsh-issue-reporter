@@ -5,10 +5,12 @@ import { registerRoutes as registerCoreRoutes } from '../lib/routes/core.js'
 import { registerRoutes as registerReportRoutes, _clearIssueStatusCache } from '../lib/routes/reports.js'
 import { registerRoutes as registerCreateRoute } from '../lib/routes/create.js'
 import { registerRoutes as registerAgentTool } from '../lib/routes/agent-tool.js'
+import { buildAiOptimizationPrompt, parseAiOptimizedResponse, redactText, composeIssueDraft } from '../lib/domain.js'
 
 function setup(services = {}) {
   const routes = new Map()
   const tools = []
+  const servicesMap = new Map()
   const ctx = {
     effect(callback) { return callback() },
     webServer: {
@@ -17,8 +19,12 @@ function setup(services = {}) {
     inject(_keys, register) {
       return register({ tools: { register(tool) { tools.push(tool); return () => {} } } })
     },
+    reflect: {
+      get(name) { return servicesMap.get(name) },
+      set(name, value) { servicesMap.set(name, value) },
+    },
   }
-  return { ctx, routes, tools, config: { tokenEnv: 'TOKEN', giteaTokenEnv: 'GITEA_TOKEN', apiBaseUrl: 'https://api.github.com' }, services }
+  return { ctx, routes, tools, servicesMap, config: { tokenEnv: 'TOKEN', giteaTokenEnv: 'GITEA_TOKEN', apiBaseUrl: 'https://api.github.com' }, services }
 }
 
 function serviceDefaults(overrides = {}) {
@@ -32,6 +38,10 @@ function serviceDefaults(overrides = {}) {
     apiFor: () => ({}),
     forgeError: (error) => ({ status: error.status || 502, error: error.message }),
     logOptionalFailure() {},
+    buildAiOptimizationPrompt,
+    parseAiOptimizedResponse,
+    redactText,
+    composeIssueDraft,
     ...overrides,
   }
 }
@@ -138,3 +148,106 @@ test('batch-status caches issue status results within TTL', async () => {
   assert.equal(networkCalls, 1) // Cached!
   assert.equal(res2.payload.statuses[0].state, 'closed')
 })
+
+test('ai/optimize redacts credentials, paths, and LAN IPs before calling LLM stream', async () => {
+  let capturedStreamArgs = null
+  const mockLlm = {
+    stream: (args) => {
+      capturedStreamArgs = args
+      return (async function* () {
+        yield { type: 'text-delta', text: 'Title: [Bug] Fixed Title\n\nObserved: Clean observed\nExpected: Clean expected' }
+      })()
+    },
+  }
+
+  const sensitiveInput = {
+    title: 'Crash with token ghp_12345678901234567890abcdef',
+    observed: 'User password=super_secret logged in from 10.23.45.67 and hit /home/alice/project/file.js',
+    reproduction: 'Visit https://admin:pass@example.com/api',
+    expected: 'No crash at 172.16.0.99',
+    errorStack: 'Error at /opt/dsh/core.js:10\nAPI Key: sk-abcdef12345678901234567890',
+    diagnostics: {
+      localHost: '10.0.0.1',
+      secretHeader: 'bearer secret_token_xyz',
+      configPath: 'C:\\Users\\alice\\AppData\\secret.json',
+    },
+    provider: 'test-provider',
+    model: 'test-model',
+  }
+
+  const fixture = setup(serviceDefaults({
+    readJson: async () => sensitiveInput,
+  }))
+  fixture.servicesMap.set('llm', mockLlm)
+  registerReportRoutes(fixture.ctx, fixture.config, fixture.services)
+
+  const res = response()
+  await fixture.routes.get('/dsh-issue-reporter/ai/optimize').handler({ method: 'POST' }, res)
+
+  assert.equal(res.status, 200)
+  assert.equal(res.payload.ok, true)
+  assert.ok(capturedStreamArgs, 'llm.stream should have been called')
+  assert.equal(capturedStreamArgs.provider, 'test-provider')
+  assert.equal(capturedStreamArgs.model, 'test-model')
+
+  const promptText = capturedStreamArgs.messages[0].content[0].text
+
+  // Assert none of the sensitive values leaked into outgoing LLM messages
+  assert.equal(promptText.includes('ghp_12345678901234567890abcdef'), false)
+  assert.equal(promptText.includes('super_secret'), false)
+  assert.equal(promptText.includes('10.23.45.67'), false)
+  assert.equal(promptText.includes('/home/alice'), false)
+  assert.equal(promptText.includes('admin:pass'), false)
+  assert.equal(promptText.includes('172.16.0.99'), false)
+  assert.equal(promptText.includes('/opt/dsh'), false)
+  assert.equal(promptText.includes('sk-abcdef12345678901234567890'), false)
+  assert.equal(promptText.includes('10.0.0.1'), false)
+  assert.equal(promptText.includes('secret_token_xyz'), false)
+  assert.equal(promptText.includes('C:\\Users\\alice'), false)
+
+  // Assert standard redactions are present
+  assert.ok(promptText.includes('[redacted token]'))
+  assert.ok(promptText.includes('[redacted credential]'))
+  assert.ok(promptText.includes('[redacted IP]'))
+  assert.ok(promptText.includes('[redacted path]'))
+  assert.ok(promptText.includes('[redacted URL]'))
+})
+
+test('ai/optimize fallback redacts all fields when LLM is unavailable', async () => {
+  const sensitiveInput = {
+    title: 'Crash with token ghp_12345678901234567890abcdef',
+    observed: 'Observed leak at 10.23.45.67 with /home/alice/secret',
+    reproduction: 'Visit password=admin_secret',
+    expected: 'Safe behavior',
+    errorStack: 'Stack in /opt/app.js',
+    diagnostics: { host: '172.16.0.10' },
+  }
+
+  const fixture = setup(serviceDefaults({
+    readJson: async () => sensitiveInput,
+  }))
+  // No LLM service configured
+  registerReportRoutes(fixture.ctx, fixture.config, fixture.services)
+
+  const res = response()
+  await fixture.routes.get('/dsh-issue-reporter/ai/optimize').handler({ method: 'POST' }, res)
+
+  assert.equal(res.status, 200)
+  assert.equal(res.payload.ok, true)
+  assert.ok(res.payload.title)
+  assert.ok(res.payload.body)
+
+  const output = res.payload.title + '\n' + res.payload.body
+  assert.equal(output.includes('ghp_12345678901234567890abcdef'), false)
+  assert.equal(output.includes('10.23.45.67'), false)
+  assert.equal(output.includes('/home/alice'), false)
+  assert.equal(output.includes('admin_secret'), false)
+  assert.equal(output.includes('/opt/app.js'), false)
+  assert.equal(output.includes('172.16.0.10'), false)
+
+  assert.ok(output.includes('[redacted token]'))
+  assert.ok(output.includes('[redacted IP]'))
+  assert.ok(output.includes('[redacted path]'))
+  assert.ok(output.includes('[redacted credential]'))
+})
+
