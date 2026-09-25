@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.1.8
+
+### English
+- **Pre-Prompt Redaction for AI Optimization (#68)**: enforced host-side sanitization of all user-supplied input fields (`title`, `observed`, `reproduction`, `expected`, `pluginName`, `errorStack`, `diagnostics`, `environment`) in `POST /dsh-issue-reporter/ai/optimize` before constructing prompts or calling `llm.stream`, preventing sensitive tokens, credentials, paths, and LAN IPs from being sent to external LLM providers.
+- **Defensive Prompt Construction**: updated `buildAiOptimizationPrompt()` in `lib/domain.js` to automatically sanitize all parameters prior to assembly, guaranteeing safe prompts regardless of caller context.
+- **Structured Diagnostics Sanitization**: enhanced `normalizeRedactInput` in `lib/domain.js` to serialize nested objects and arrays into formatted JSON before applying redaction patterns, ensuring structured logs and diagnostic maps are scrubbed safely.
+- **Model Output & Heuristic Fallback Protection**: sanitized model responses before returning them to client, and maintained full redaction across the heuristic draft fallback.
+- **Design Contract**: codified prompt redaction invariant in `docs/design/DESIGN.md`.
+
+### Русский
+- **Санитизация входных данных перед вызовом LLM (#68)**: в эндпоинте `POST /dsh-issue-reporter/ai/optimize` обеспечена обязательная очистка всех пользовательских полей (`title`, `observed`, `reproduction`, `expected`, `pluginName`, `errorStack`, `diagnostics`, `environment`) через `redactText` до сборки промпта и отправки в `llm.stream`. Исключена утечка токенов, паролей, путей файловой системы и LAN IP внешним провайдерам моделей.
+- **Защитная сборка промпта**: в функции `buildAiOptimizationPrompt()` (`lib/domain.js`) добавлена санитизация входных аргументов на стороне хоста.
+- **Поддержка структурированных диагностик**: функция `normalizeRedactInput` сериализует вложенные объекты и массивы в JSON перед применением правил `REDACTIONS` (включая поддержку `Bearer <token>` и исключение кавычек JSON).
+- **Очистка ответа модели и фоллбэка**: возвращаемый текст от LLM санитизируется перед отправкой клиенту; эвристический фоллбэк черновика гарантированно защищён от утечек.
+- **Дизайн-контракт**: инвариант очистки зафиксирован в `docs/design/DESIGN.md`.
+
+### 中文
+- **AI 优化提示词预脱敏 (#68)**：在 `POST /dsh-issue-reporter/ai/optimize` 路由中，在构建提示词和调用 `llm.stream` 之前，强制对所有用户提交的字段（`title`、`observed`、`reproduction`、`expected`、`pluginName`、`errorStack`、`diagnostics`、`environment`）执行 `redactText` 脱敏，防止敏感令牌、凭证、私有路径和局域网 IP 发送至外部 LLM 服务商。
+- **防御性提示词构建**：在 `lib/domain.js` 的 `buildAiOptimizationPrompt()` 中添加了宿主侧参数清洗，确保无论调用来源均生成安全的提示词文本。
+- **结构化诊断脱敏**：增强了 `normalizeRedactInput`，在应用脱敏规则前将嵌套对象与数组序列化为格式化 JSON，安全脱敏嵌套日志与环境诊断。
+- **模型输出与回退保护**：在返回给客户端前对模型响应进行脱敏，并在启发式草稿回退路径中保持完整的脱敏保护。
+- **设计契约**：在 `docs/design/DESIGN.md` 中固化了 AI 提示词脱敏规范。
+
 ## 0.1.7
 
 ### English
