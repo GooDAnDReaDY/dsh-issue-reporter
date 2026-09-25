@@ -86,3 +86,32 @@ test('composeIssueDraft redacts LAN IP and JWT in issue body', () => {
   assert.ok(draft.redactions.includes('ip'))
   assert.ok(draft.redactions.includes('token'))
 })
+
+test('buildAiOptimizationPrompt redacts sensitive tokens, credentials, paths and LAN IPs', () => {
+  const prompt = buildAiOptimizationPrompt({
+    title: 'Secret leak sk-12345678901234567890 in service',
+    observed: 'Contacted https://admin:supersecret@example.com with token ghp_12345678901234567890abcdef',
+    reproduction: 'curl http://10.0.0.1/api with password=secret_pw',
+    expected: 'Should connect securely without token',
+    pluginName: 'dsh-voice',
+    errorStack: 'Error at /home/alice/project/index.js:42',
+    diagnostics: { host: '172.16.0.5', apiKey: 'sk-98765432109876543210', path: '/opt/app/logs' },
+    environment: 'Node v22 on 10.23.45.67',
+  })
+  assert.equal(prompt.includes('sk-12345678901234567890'), false)
+  assert.equal(prompt.includes('ghp_12345678901234567890abcdef'), false)
+  assert.equal(prompt.includes('admin:supersecret'), false)
+  assert.equal(prompt.includes('secret_pw'), false)
+  assert.equal(prompt.includes('10.0.0.1'), false)
+  assert.equal(prompt.includes('10.23.45.67'), false)
+  assert.equal(prompt.includes('172.16.0.5'), false)
+  assert.equal(prompt.includes('/home/alice'), false)
+  assert.equal(prompt.includes('/opt/app'), false)
+  assert.equal(prompt.includes('sk-98765432109876543210'), false)
+  assert.ok(prompt.includes('[redacted token]'))
+  assert.ok(prompt.includes('[redacted path]'))
+  assert.ok(prompt.includes('[redacted IP]'))
+  assert.ok(prompt.includes('[redacted URL]'))
+  assert.ok(prompt.includes('[redacted credential]'))
+})
+
