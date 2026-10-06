@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.10
+
+### English
+- **Defensive Connection Service Resolution (#74)**: added `getConnection(ctx)` in `lib/routes/shared.js` implementing a resilient three-tier fallback resolution (`ctx.reflect?.get('connection')` -> `ctx.get('connection')` -> `ctx.connection` / `Reflect.get(ctx, 'connection')`). Eliminates single points of failure across all twelve plugin endpoints when `ctx.reflect` is unavailable on the host while preserving fail-closed 503 security invariants.
+- **Safety & Regression Tests**: added unit tests in `test/request-guard.test.mjs` verifying fallback resolution to `ctx.get` and `ctx.connection`, as well as when `ctx.reflect.get` returns undefined.
+- **Design Contract**: updated connection service resolution guarantees in `docs/design/DESIGN.md`.
+
+### Русский
+- **Многоуровневый фоллбэк сервиса авторизации соединений (#74)**: в `lib/routes/shared.js` добавлен хелпер `getConnection(ctx)`, реализующий защищённый трёхступенчатый поиск сервиса (`ctx.reflect?.get('connection')` -> `ctx.get('connection')` -> `ctx.connection` / `Reflect.get(ctx, 'connection')`). Устранена критическая точка отказа для всех 12 маршрутов плагина при отсутствии `ctx.reflect` на хосте с полным сохранением fail-closed защиты (HTTP 503 при отсутствии сервиса).
+- **Тесты регрессии**: в `test/request-guard.test.mjs` добавлены тесты на успешную авторизацию через `ctx.get` и `ctx.connection`, а также при возврате `undefined` из `reflect.get`.
+- **Дизайн-контракт**: правила многоуровневого разрешения сервиса зафиксированы в `docs/design/DESIGN.md`.
+
+### 中文
+- **防御性连接认证服务解析 (#74)**：在 `lib/routes/shared.js` 中新增 `getConnection(ctx)` 辅助函数，实现三级弹性回退策略（`ctx.reflect?.get('connection')` -> `ctx.get('connection')` -> `ctx.connection` / `Reflect.get(ctx, 'connection')`）。消除了主机环境中缺少 `ctx.reflect` 时导致全部 12 个路由返回 503 的单点隐患，同时严格保持 fail-closed 503 安全性。
+- **回归与安全测试**：在 `test/request-guard.test.mjs` 中添加针对 `ctx.get` 与 `ctx.connection` 回退解析以及 `reflect.get` 返回 `undefined` 时的单元测试。
+- **设计契约**：在 `docs/design/DESIGN.md` 中补充了连接服务解析规范。
+
 ## 0.1.9
 
 ### English
