@@ -28,7 +28,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 ## Trust boundaries
 
 - Route authorization fails closed with HTTP 503 when the DSH connection service is missing or cannot evaluate the request. Connection service resolution employs defensive fallbacks (`ctx.reflect?.get('connection')` -> `ctx.get('connection')` -> `ctx.connection`) to guard against host context differences without exposing unprotected endpoints.
-- Plugin metadata is untrusted input and is validated before rendering.
+- Plugin metadata is untrusted input and is validated before rendering. Package metadata resolution for loader inventory is cached in-memory with a 60-second TTL to eliminate redundant require.resolve disk hits on /status polling, and invalidated upon loader/config reload events.
 - Report text can contain secrets, private paths, URLs with credentials, personal data, LAN IPs, and session tokens; redaction is mandatory before preview, logs inspection, prompt assembly, and API calls. Hardened redaction captures token/secret suffixes (`*_token=`, `*_secret=`, `*_password=`, `*_key=`), camelCase keys (`accessToken`, `clientSecret`), Basic and Bearer auth headers, all POSIX absolute filesystem roots (`/etc`, `/var`, `/tmp`, `/root`, `/usr`, etc.), and Windows UNC/drive paths without corrupting standard web URLs.
 - AI draft optimization (`/dsh-issue-reporter/ai/optimize`) must never send raw credentials, tokens, filesystem paths, internal LAN IPs, or user data to external LLM providers; prompt construction enforces host-side redaction across all parameters.
 - In-progress report drafts are saved to `sessionStorage` and cleared upon confirmed issue submission to prevent accidental data loss.

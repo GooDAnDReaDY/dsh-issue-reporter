@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
-import { apply, Config, name, inject } from '../lib/index.js'
+import { apply, Config, name, inject, packageMetadata, clearMetadataCache, getMetadataCache } from '../lib/index.js'
 
 const indexSource = readFileSync(new URL('../lib/index.js', import.meta.url), 'utf8')
 
@@ -128,4 +128,31 @@ test('apply handles missing settings service gracefully', () => {
     apply(mockCtx, config)
   })
   assert.equal(config.appClientId, 'initial')
+})
+
+test('#76 — packageMetadata caches require.resolve and package.json results in-memory', async () => {
+  clearMetadataCache()
+  const cache = getMetadataCache()
+  assert.equal(cache.size, 0)
+
+  // 1. Successful lookup
+  const meta = await packageMetadata('@goodandready/dsh-issue-reporter')
+  assert.ok(meta, 'Metadata must be returned')
+  assert.equal(meta.name, '@goodandready/dsh-issue-reporter')
+  assert.equal(cache.size, 1)
+
+  // Second hit must use cached value
+  const meta2 = await packageMetadata('@goodandready/dsh-issue-reporter')
+  assert.equal(meta2, meta, 'Subsequent call must return cached reference')
+
+  // 2. Negative lookup (non-existent module)
+  const missing = await packageMetadata('@goodandready/dsh-nonexistent-module')
+  assert.equal(missing, undefined)
+  assert.equal(cache.size, 2)
+  const missingCached = await packageMetadata('@goodandready/dsh-nonexistent-module')
+  assert.equal(missingCached, undefined)
+
+  // 3. Cache clearing
+  clearMetadataCache()
+  assert.equal(cache.size, 0)
 })
