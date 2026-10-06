@@ -91,7 +91,7 @@ graph LR
 未登录状态下，支持一键生成带预填参数的 GitHub Issue 网页链接供用户手动提交。
 
 ### 5. 自主 Agent 报告工具 (`report_issue`)
-在 Cordis `ctx.tools` 中注册官方工具，允许自主编程 Agent 与任务编排器在插件发生异常时自动提炼并起草规范的 Issue。
+在 Cordis `ctx.tools` 中注册官方工具，允许自主编程 Agent 与任务编排器在插件发生异常时自动提炼并起草规范的 Issue 草稿与预填链接，严格经过人工确认后再提交。
 
 ### 6. AI 润色与复现步骤生成器
 通过 `POST /dsh-issue-reporter/ai/optimize` 与 `ctx.llm` 联动，一键将零散的报错描述转化为清晰专业的复现步骤与精准标题。
