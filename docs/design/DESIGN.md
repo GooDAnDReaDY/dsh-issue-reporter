@@ -47,6 +47,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 - Errors are only converted into empty results for documented optional cases (for example, optional telemetry logs). Authorization, credentials, and remote API failures remain visible to the caller and are logged where a safe fallback is intentionally used.
 - Updater failures distinguish network errors from HTTP responses, preserving the localized message and showing the HTTP status when the server returned a non-success response.
 - Development work occurs only in dedicated worktrees under `.worktrees/<branch>`; completed task worktrees are verified as ancestors of `origin/main` and pruned promptly to maintain a clean repository tree.
+- Host configuration conforms to DSH 0.2: `Config` defines `.volatile()` for editable non-secret properties (`appClientId`, `apiBaseUrl`, `giteaBaseUrl`, `timeoutMs`, `ghPath`), while credential references retain `role('credential-ref')`. The host settings service uses safe opt-out (`settings.configure({ auto: false }, ctx.fiber)`) without calling deprecated `settings.register()` or `scope.watch()`. Dynamic configuration updates are listened via `loader/volatile-update`, `config`, and `settings/document-updated` to support zero-downtime hot reload.
 
 ## Localization
 
