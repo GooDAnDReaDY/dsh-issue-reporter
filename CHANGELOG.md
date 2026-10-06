@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.11
+
+### English
+- **Autonomous Agent Tool Safety Hardening (#79)**: eliminated autonomous upstream issue creation in the `report_issue` Cordis tool (`lib/routes/agent-tool.js`). Removed the `confirm_submit` argument from the tool schema and execution path. When invoked by an agent, `report_issue` now strictly prepares a sanitized bug report draft with prefilled review URLs (`submitted: false`) for explicit human review. Upstream issue creation requires interactive browser-based confirmation through `/dsh-issue-reporter/create`.
+- **Safety & Regression Tests**: added verification in `test/routes.test.mjs` ensuring `confirm_submit` is absent from parameters and direct creation API calls are never triggered even if passed.
+- **Design Contract**: updated agent tool boundaries and human review invariants in `docs/design/DESIGN.md`.
+
+### Русский
+- **Безопасность автономного вызова инструмента агента (#79)**: устранена возможность прямой публикации issue во внешние репозитории без участия человека через инструмент `report_issue` (`lib/routes/agent-tool.js`). Из схемы и логики инструмента полностью удалён параметр `confirm_submit`. При вызове агентом инструмент всегда возвращает очищенный черновик с предзаполненным URL (`submitted: false`) для ручной проверки человеком. Создание issue на GitHub/Gitea доступно исключительно через интерактивный интерфейс браузера с явным подтверждением `/dsh-issue-reporter/create`.
+- **Тесты регрессии**: в `test/routes.test.mjs` добавлен тест, проверяющий отсутствие `confirm_submit` в схеме инструмента и гарантию запрета вызова API создания issue даже при попытке передачи флага.
+- **Дизайн-контракт**: обновлены границы автономного инструмента и инварианты обязательного подтверждения человеком в `docs/design/DESIGN.md`.
+
+### 中文
+- **自主智能体工具安全加固 (#79)**：彻底移除了 Cordis `report_issue` 工具（`lib/routes/agent-tool.js`）中未经人类确认直接向上游代码托管平台创建 issue 的逻辑。从工具参数模式与执行路径中完全移除了 `confirm_submit` 参数。智能体调用时始终仅生成脱敏的缺陷草稿与预填充审查链接（`submitted: false`），由人类用户审查。实际向上游仓库创建 issue 严格限定于浏览器交互界面并通过 `/dsh-issue-reporter/create` 进行显式确认。
+- **回归与安全测试**：在 `test/routes.test.mjs` 中添加测试用例，校验 `confirm_submit` 已从工具定义中彻底移除，且即便传入该参数也绝不触发远程 API 创建。
+- **设计契约**：在 `docs/design/DESIGN.md` 中更新了自主工具边界与人工确认安全规范。
+
 ## 0.1.10
 
 ### English
