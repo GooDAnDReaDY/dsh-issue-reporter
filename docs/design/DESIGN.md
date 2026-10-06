@@ -35,7 +35,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 - GitHub and Gitea tokens never enter React state, settings snapshots, logs, URLs, or issue bodies.
 - Same-origin and loopback checks protect state-changing local routes and updater operations.
 - Autonomous agent tool calls (`report_issue`) never publish externally; they always return a sanitized draft and prefilled URL for human review. Upstream issue creation requires interactive browser-based review and explicit confirmation via `/dsh-issue-reporter/create`.
-- Screenshot files are validated by extension, MIME type, count, and size before upload. They are not written to DSH storage or logs; temporary upload files are removed after the GitHub CLI process finishes.
+- Screenshot files are validated by extension, MIME type, count, and size before upload. They are written to a restricted temporary directory with 0700 directory permissions and 0600 file modes. The GitHub CLI child process runs with an isolated, minimal environment (blocking host secrets like DEEPSEEK_* or GITEA_*) and validated executable paths. Any CLI error output is redacted and truncated before being re-thrown to the client. Temporary upload files and directories are safely cleaned up in a finally block.
 
 ## Implementation boundaries
 
