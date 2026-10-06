@@ -251,3 +251,50 @@ test('ai/optimize fallback redacts all fields when LLM is unavailable', async ()
   assert.ok(output.includes('[redacted credential]'))
 })
 
+test('#79 — report_issue agent tool never submits directly and omits confirm_submit', async () => {
+  let createIssueCalled = false
+  const fixture = setup(serviceDefaults({
+    catalogFromLoader: async () => [
+      {
+        moduleName: '@goodandready/dsh-voice',
+        displayName: 'Voice Input',
+        repository: { forge: 'github', owner: 'goodandready', repo: 'dsh-voice' },
+      },
+    ],
+    prefilledIssueUrl: (repo, draft) => `https://github.com/${repo.owner}/${repo.repo}/issues/new`,
+    withGitHubCredential: async () => {
+      createIssueCalled = true
+      return { number: 123, html_url: 'https://github.com/goodandready/dsh-voice/issues/123' }
+    },
+    giteaApiFor: () => ({
+      createIssue: async () => {
+        createIssueCalled = true
+        return { number: 123, url: 'https://gitea.example.com/issue/123' }
+      },
+    }),
+  }))
+
+  registerAgentTool(fixture.ctx, fixture.config, fixture.services)
+  const tool = fixture.tools.find((t) => t.name === 'report_issue')
+  assert.ok(tool, 'report_issue must be registered')
+
+  // confirm_submit parameter must be removed from tool parameters
+  assert.equal(tool.parameters.confirm_submit, undefined, 'confirm_submit must not exist in parameters')
+
+  // When called with confirm_submit: true, must NOT submit and return submitted: false
+  const result = await tool.execute({
+    plugin_name: '@goodandready/dsh-voice',
+    title: 'Model crashed on audio input',
+    description: 'Segmentation fault during transcription',
+    severity: 'high',
+    confirm_submit: true,
+  })
+
+  assert.equal(createIssueCalled, false, 'createIssue must never be called by agent tool')
+  assert.equal(result.ok, true)
+  assert.equal(result.submitted, false, 'submitted must be false even with confirm_submit: true')
+  assert.ok(result.draft, 'draft must be present')
+  assert.ok(result.prefilledUrl, 'prefilledUrl must be present')
+  assert.match(result.draft.title, /\[HIGH\] Model crashed on audio input/)
+})
+

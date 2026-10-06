@@ -2,7 +2,7 @@
 
 ## Product promise
 
-The plugin turns a discovered DSH plugin defect into a reviewable issue draft for GitHub or Gitea/Forgejo. It never sends external data silently: the user sees the selected repository, sanitized draft, duplicate candidates, selected screenshots, recommended labels, and the final confirmation before an upstream write. When invoked by an autonomous agent through `ctx.tools`, it produces a reviewable draft by default, or safely files with explicit confirmation.
+The plugin turns a discovered DSH plugin defect into a reviewable issue draft for GitHub or Gitea/Forgejo. It never sends external data silently: the user sees the selected repository, sanitized draft, duplicate candidates, selected screenshots, recommended labels, and the final confirmation before an upstream write. When invoked by an autonomous agent through `ctx.tools`, it produces a reviewable draft and prefilled link for human review, never publishing upstream automatically.
 
 ## Surfaces
 
@@ -12,7 +12,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
   - **Report Editor**: dual-mode `Write` and `Preview` panes, AI-assisted draft optimization button, session log snippet selector, auto-labeling chips, screenshot dropzone with clipboard paste, redaction summary, duplicate issues list, and explicit submission confirmation.
   - **My Reports**: session and local history with batch status refresh tracking open/closed state and comment counts.
   - **Authorization**: GitHub OAuth App Device Flow sign-in, switch account / sign out, and Gitea credential status.
-- Autonomous Tool Surface: `report_issue` tool registered in Cordis `ctx.tools` enabling agents to draft or file structured bug reports for failing plugins during automated workflows.
+- Autonomous Tool Surface: `report_issue` tool registered in Cordis `ctx.tools` enabling agents to prepare sanitized bug report drafts with prefilled review URLs for failing plugins during automated workflows without direct external writes.
 
 ## Data flow
 
@@ -34,7 +34,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 - In-progress report drafts are saved to `sessionStorage` and cleared upon confirmed issue submission to prevent accidental data loss.
 - GitHub and Gitea tokens never enter React state, settings snapshots, logs, URLs, or issue bodies.
 - Same-origin and loopback checks protect state-changing local routes and updater operations.
-- Autonomous agent tool calls cannot publish externally without `confirm_submit: true` and configured credentials.
+- Autonomous agent tool calls (`report_issue`) never publish externally; they always return a sanitized draft and prefilled URL for human review. Upstream issue creation requires interactive browser-based review and explicit confirmation via `/dsh-issue-reporter/create`.
 - Screenshot files are validated by extension, MIME type, count, and size before upload. They are not written to DSH storage or logs; temporary upload files are removed after the GitHub CLI process finishes.
 
 ## Implementation boundaries
