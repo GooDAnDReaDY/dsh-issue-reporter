@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.1.9
+
+### English
+- **DSH 0.2 Settings Service Alignment (#71, #72, #73, #77, #78)**: eliminated calls to deprecated `settings.register()`, `scope.get()`, and `scope.watch()` in `lib/index.js` that caused runtime errors or broken configuration lifecycle on DSH 0.2 (`0.2.0-rc.1`/`rc.2`).
+- **Safe Host Settings Opt-Out**: integrated standard DSH 0.2 settings configuration opt-out (`sctx.settings?.configure?.({ auto: false }, ctx.fiber)`) to allow the custom plugin settings card to own the UI surface cleanly.
+- **Volatile Schema Annotations**: marked user-editable `Config` properties (`appClientId`, `apiBaseUrl`, `giteaBaseUrl`, `timeoutMs`, `ghPath`) with `.volatile()`, backed by Schemastery prototype polyfill, enabling DSH 0.2 to service and persist settings without daemon restarts. Preserved `role('credential-ref')` for secrets (`tokenEnv`, `giteaTokenEnv`).
+- **Zero-Downtime Hot Reload**: added live listeners for `loader/volatile-update`, `config`, and `settings/document-updated` on `ctx`, instantly propagating configuration edits across all server routes without restarting.
+- **Safety & Regression Tests**: added dedicated test suite `test/settings.test.mjs` verifying clean initialization without `settings.register`, schema metadata roles, and live volatile patch delivery.
+
+### Русский
+- **Совместимость с сервисом настроек DSH 0.2 (#71, #72, #73, #77, #78)**: полностью удалены вызовы устаревших методов `settings.register()`, `scope.get()` и `scope.watch()` в `lib/index.js`, приводивших к исключениям и неработоспособности настроек на DSH 0.2 (`0.2.0-rc.1`/`rc.2`).
+- **Штатный opt-out хоста**: добавлен вызов `sctx.settings?.configure?.({ auto: false }, ctx.fiber)`, исключающий конфликт встроенной автогенерации DSH с кастомной карточкой плагина.
+- **Аннотации .volatile() в схеме Schemastery**: редактируемые поля `Config` (`appClientId`, `apiBaseUrl`, `giteaBaseUrl`, `timeoutMs`, `ghPath`) помечены как `.volatile()` с безопасным полифилом на прототипе Schemastery, что обеспечивает их отображение и сохранение ядром DSH 0.2 без рестарта. Ссылки на секреты (`tokenEnv`, `giteaTokenEnv`) сохранены с типом `role('credential-ref')`.
+- **Горячее обновление без перезапуска (HMR)**: подключены слушатели событий `loader/volatile-update`, `config` и `settings/document-updated`, мгновенно обновляющие живую конфигурацию для всех обработчиков маршрутов.
+- **Тесты регрессии**: создан тест-сьют `test/settings.test.mjs`, контролирующий отсутствие удалённых методов `settings.register`/`scope.watch`, корректность метаданных схемы и работу с DSH 0.2 контрактом.
+
+### 中文
+- **适配 DSH 0.2 设置服务 (#71, #72, #73, #77, #78)**：完全移除了 `lib/index.js` 中已废弃的 `settings.register()`、`scope.get()` 和 `scope.watch()` 调用，解决了在 DSH 0.2 (`0.2.0-rc.1`/`rc.2`) 环境下因接口缺失导致的运行时异常与设置失效问题。
+- **安全的主机设置 opt-out**：接入标准 DSH 0.2 设置配置排除机制（`sctx.settings?.configure?.({ auto: false }, ctx.fiber)`），由插件自身的设置卡片独立接管配置界面。
+- **Schemastery 模式 volatile 标记**：为用户可编辑配置项（`appClientId`、`apiBaseUrl`、`giteaBaseUrl`、`timeoutMs`、`ghPath`）添加 `.volatile()` 链式标记并提供 Schemastery 原型补丁，使 DSH 0.2 核心能够正确持久化和维护配置而无需重启守护进程；凭证引用（`tokenEnv`、`giteaTokenEnv`）保持 `role('credential-ref')`。
+- **零停机热重载**：在 `ctx` 上监听 `loader/volatile-update`、`config` 和 `settings/document-updated` 事件，实时将修改后的配置应用到所有路由处理器中。
+- **回归与安全测试**：新增 `test/settings.test.mjs` 测试套件，严格校验无 `settings.register`/`scope.watch` 调用、模式元数据正确性以及 DSH 0.2 契约下的热更新。
+
 ## 0.1.8
 
 ### English
