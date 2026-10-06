@@ -139,3 +139,39 @@ test('findDuplicateIssues preserves issue state', () => {
   assert.equal(result[0].state, 'closed')
   assert.equal(result[1].state, 'open')
 })
+
+test('#80 — redactText hardens secret and path redaction (suffixes, camelCase, Basic Auth, POSIX/Windows paths)', () => {
+  // Suffixes without left boundary
+  assert.equal(redactText('access_token=secret123').text, '[redacted credential]')
+  assert.equal(redactText('refresh_token: token456').text, '[redacted credential]')
+  assert.equal(redactText('client_secret=topsecret').text, '[redacted credential]')
+  assert.equal(redactText('api_key=apikey123').text, '[redacted credential]')
+
+  // camelCase keys
+  assert.equal(redactText('clientSecret: confidential789').text, '[redacted credential]')
+  assert.equal(redactText('accessToken: token_val').text, '[redacted credential]')
+  assert.equal(redactText('refreshToken: refresh_val').text, '[redacted credential]')
+  assert.equal(redactText('apiKey: my_key').text, '[redacted credential]')
+
+  // Authorization: Basic & Bearer
+  assert.equal(redactText('Authorization: Basic dXNlcjpwYXNz').text, '[redacted credential]')
+  assert.equal(redactText('Authorization: Basic').text, '[redacted credential]')
+  assert.equal(redactText('Authorization: Bearer some_token').text, '[redacted credential]')
+
+  // POSIX filesystem paths
+  assert.equal(redactText('/etc/passwd').text, '[redacted path]')
+  assert.equal(redactText('/var/log/x').text, '[redacted path]')
+  assert.equal(redactText('/tmp/y').text, '[redacted path]')
+  assert.equal(redactText('temporary folder /tmp and /root/.bashrc').text, 'temporary folder [redacted path] and [redacted path]')
+  assert.equal(redactText('/usr/bin/node and /bin/sh').text, '[redacted path] and [redacted path]')
+
+  // Windows drive and UNC paths
+  assert.equal(redactText('C:/project/sample.txt').text, '[redacted path]')
+  assert.equal(redactText('C:\\project\\sample.txt').text, '[redacted path]')
+  assert.equal(redactText('\\\\server\\share\\file.txt').text, '[redacted path]')
+
+  // Safe web URLs, MIME types, and JSON tags must NOT be corrupted
+  assert.equal(redactText('https://example.com/etc/passwd').text, 'https://example.com/etc/passwd')
+  assert.equal(redactText('http://localhost:3000/api/status').text, 'http://localhost:3000/api/status')
+  assert.equal(redactText('application/json').text, 'application/json')
+})
