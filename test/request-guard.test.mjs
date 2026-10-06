@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { authorizeRequest } from '../lib/routes/shared.js'
+import { authorizeRequest, getConnection } from '../lib/routes/shared.js'
 
 function response() {
   return {
@@ -79,3 +79,38 @@ test('fails closed when connection authorization throws', () => {
   assert.equal(res.status, 503)
   assert.equal(res.payload.error, 'DSH browser authentication is unavailable')
 })
+
+test('#74 — getConnection and authorizeRequest fall back to ctx.get when ctx.reflect is missing', () => {
+  const dummyConn = { requestRejection: () => undefined }
+  const ctx = {
+    get: (name) => (name === 'connection' ? dummyConn : undefined),
+  }
+
+  assert.equal(getConnection(ctx), dummyConn)
+  const res = response()
+  assert.equal(authorizeRequest(ctx, {}, res), true)
+  assert.equal(res.status, undefined)
+})
+
+test('#74 — getConnection and authorizeRequest fall back to ctx.connection when reflect and get are missing', () => {
+  const dummyConn = { requestRejection: () => undefined }
+  const ctx = {
+    connection: dummyConn,
+  }
+
+  assert.equal(getConnection(ctx), dummyConn)
+  const res = response()
+  assert.equal(authorizeRequest(ctx, {}, res), true)
+  assert.equal(res.status, undefined)
+})
+
+test('#74 — getConnection falls back to ctx.get when ctx.reflect.get returns undefined', () => {
+  const dummyConn = { requestRejection: () => undefined }
+  const ctx = {
+    reflect: { get: () => undefined },
+    get: (name) => (name === 'connection' ? dummyConn : undefined),
+  }
+
+  assert.equal(getConnection(ctx), dummyConn)
+})
+

@@ -27,7 +27,7 @@ The plugin turns a discovered DSH plugin defect into a reviewable issue draft fo
 
 ## Trust boundaries
 
-- Route authorization fails closed with HTTP 503 when the DSH connection service is missing or cannot evaluate the request.
+- Route authorization fails closed with HTTP 503 when the DSH connection service is missing or cannot evaluate the request. Connection service resolution employs defensive fallbacks (`ctx.reflect?.get('connection')` -> `ctx.get('connection')` -> `ctx.connection`) to guard against host context differences without exposing unprotected endpoints.
 - Plugin metadata is untrusted input and is validated before rendering.
 - Report text can contain secrets, private paths, URLs with credentials, personal data, LAN IPs, and session tokens; redaction is mandatory before preview and API calls.
 - AI draft optimization (`/dsh-issue-reporter/ai/optimize`) must never send raw credentials, tokens, filesystem paths, internal LAN IPs, or user data to external LLM providers; prompt construction enforces host-side redaction across all parameters.
