@@ -93,7 +93,7 @@ The built-in editor captures structured report fields:
 * **Safe Fallback**: If no GitHub account is connected, the editor provides a prefilled GitHub issue-form link for manual submission.
 
 ### 5. Autonomous Agent Reporting Tool (`report_issue`)
-Registers an official tool in Cordis `ctx.tools` allowing autonomous coding agents and orchestrators to prepare or file structured bug reports whenever an installed plugin encounters an unhandled exception or runtime crash.
+Registers an official tool in Cordis `ctx.tools` allowing autonomous coding agents and orchestrators to prepare reviewable bug report drafts with prefilled review links whenever an installed plugin encounters an unhandled exception or runtime crash, strictly requiring human review before upstream creation.
 
 ### 6. AI Summary & Repro Step Generator
 Integrated with `ctx.llm` via `POST /dsh-issue-reporter/ai/optimize`, allowing users to polish unstructured error notes into clean, reproducible steps and an actionable issue title with one click.
