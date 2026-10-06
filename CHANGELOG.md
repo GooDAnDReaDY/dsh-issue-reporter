@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.1.13
+
+### English
+- **Subprocess Environment Isolation & CLI Error Sanitization (#75, #81)**:
+  - Enforced an isolated environment whitelist (`PATH`, `HOME`, `USERPROFILE`, `SYSTEMROOT`, `WINDIR`, `TMPDIR`, proxies, `GH_HOST`, `GH_TOKEN`) for the `gh` child process in `lib/attachments.js`, preventing leakage of host secrets (`DEEPSEEK_*`, `GITEA_*`, DSH internal keys).
+  - Restriced temporary upload directories to mode `0700` and files (`issue.md`, screenshot attachments) to mode `0600`.
+  - Added strict `ghPath` binary validation ensuring executable names or absolute files only.
+  - Sanitized CLI error messages: scrubbed tokens and sensitive parameters via `redactText` before re-throwing to HTTP clients.
+- **In-Memory Package Metadata Resolution Cache (#76)**:
+  - Cached `packageMetadata` `require.resolve` and `package.json` lookups in `lib/index.js` with a 60-second TTL, eliminating redundant disk I/O on every `/status` check.
+  - Automatically invalidated the metadata cache on live configuration and loader update events.
+- **Safety & Regression Tests**: added full coverage in `test/attachments.test.mjs` and `test/settings.test.mjs`.
+- **Design Contract**: codified subprocess environment isolation, temporary file modes, and metadata cache invariants in `docs/design/DESIGN.md`.
+
+### Русский
+- **Изоляция окружения дочернего процесса GitHub CLI и очистка вывода (#75, #81)**:
+  - Реализован белый список переменных окружения (`PATH`, `HOME`, `USERPROFILE`, `SYSTEMROOT`, `WINDIR`, `TMPDIR`, прокси, `GH_HOST`, `GH_TOKEN`) в `buildSafeEnv` (`lib/attachments.js`), предотвращающий утечку секретов хоста (`DEEPSEEK_*`, `GITEA_*`, учетных данных DSH).
+  - Установлены строгие права доступа: каталог временного размещения создается с режимом `0700`, а файлы отчета и скриншотов — с режимом `0600`.
+  - Добавлена валидация `ghPath`: разрешены только безопасные имена команд либо абсолютные исполняемые файлы.
+  - Сообщения об ошибках `gh` десенсибилизируются через `redactText` и замену токенов перед отправкой клиенту.
+- **Кэширование метаданных плагинов в памяти (#76)**:
+  - Добавлен кэш в памяти с TTL 60 секунд для вызовов `packageMetadata` (`require.resolve` и чтение `package.json`) в `lib/index.js`, устраняющий повторные дисковые операции при каждом обращении к `/status`.
+  - Обеспечен автоматический сброс кэша при обновлении конфигурации и событиях лоадера (`loader/volatile-update`).
+- **Тесты регрессии**: добавлены тесты в `test/attachments.test.mjs` и `test/settings.test.mjs`.
+- **Дизайн-контракт**: инварианты изоляции процессов и кэширования зафиксированы в `docs/design/DESIGN.md`.
+
+### 中文
+- **GitHub CLI 子进程环境隔离与输出脱敏 (#75, #81)**：
+  - 在 `lib/attachments.js` 中引入环境变量白名单机制（`buildSafeEnv`），为 `gh` 子进程仅提供必需系统变量与凭证（`PATH`、`HOME`、`USERPROFILE`、`SYSTEMROOT`、`WINDIR`、`TMPDIR`、代理设置、`GH_HOST`、`GH_TOKEN`），杜绝 `DEEPSEEK_*`、`GITEA_*` 等宿主敏感环境变量泄露。
+  - 严格限制临时目录权限至 `0700`，议题正文与截图文件模式限制至 `0600`。
+  - 增加 `ghPath` 二进制路径安全校验，仅允许合法命令名或已存在的绝对路径文件。
+  - CLI 错误回显脱敏：捕获 CLI 异常时对错误输出中的 Token、认证头及路径执行 `redactText` 净化并限制长度后再抛出。
+- **内存包元数据解析缓存 (#76)**：
+  - 在 `lib/index.js` 中为 `packageMetadata`（`require.resolve` 与 `package.json` 读取）引入 60 秒 TTL 内存缓存，彻底消除每次请求 `/status` 时的重复磁盘 I/O。
+  - 在配置热更新及加载器更新事件触发时自动清空元数据缓存。
+- **回归与安全测试**：在 `test/attachments.test.mjs` 与 `test/settings.test.mjs` 中添加全面测试覆盖。
+- **设计契约**：在 `docs/design/DESIGN.md` 中补充了子进程隔离与元数据缓存安全规范。
+
 ## 0.1.12
 
 ### English
