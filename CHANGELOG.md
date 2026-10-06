@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.1.12
+
+### English
+- **Hardened Secret and Path Redaction (#80)**: reinforced `redactText` in `lib/domain.js` against data leakage across public issue bodies, session logs, and AI optimization prompts.
+  - Suffix matching without left word boundary now scrubs compound credential keys such as `access_token=`, `refresh_token:`, `client_secret=`, `api_key=`, `secret_key=`, and `auth_token=`.
+  - Added support for camelCase credential keys (`accessToken:`, `refreshToken:`, `clientSecret:`, `apiKey:`, `userPassword:`).
+  - Added redaction for `Authorization: Basic` and `Authorization: Basic <base64>` header representations alongside existing Bearer auth handling.
+  - Expanded filesystem path detection to all standard POSIX root directories (`/etc`, `/var`, `/tmp`, `/root`, `/usr`, `/bin`, `/sbin`, `/lib`, `/proc`, `/sys`, `/dev`, `/opt`, `/mnt`, `/srv`, etc.), Windows drive letter paths with both forward and backslashes (`C:/...`, `C:\...`), and Windows UNC shares (`\\server\share`).
+  - Preserved standard public web URLs (`https://...`, `http://...`) and common MIME types (`application/json`) from false-positive truncation.
+- **Safety & Regression Tests**: added targeted unit test suite in `test/domain.test.mjs` verifying each credential and path format.
+- **Design Contract**: updated redaction guarantees in `docs/design/DESIGN.md`.
+
+### Русский
+- **Усиление десенсибилизации секретов и путей файловой системы (#80)**: закрыты уязвимости очистки конфиденциальных данных в `redactText` (`lib/domain.js`), применяемом к черновикам issue, логам сессии хоста и промптам AI-оптимизации.
+  - Матчинг суффиксов без строгой левой границы очищает составные ключи: `access_token=`, `refresh_token:`, `client_secret=`, `api_key=`, `secret_key=`, `auth_token=`.
+  - Добавлена очистка ключей в camelCase (`accessToken:`, `refreshToken:`, `clientSecret:`, `apiKey:`, `userPassword:`).
+  - Добавлен перехват заголовков `Authorization: Basic` и `Authorization: Basic <base64>` в дополнение к существующему Bearer auth.
+  - Обнаружение путей файловой системы расширено на все стандартные корни POSIX (`/etc`, `/var`, `/tmp`, `/root`, `/usr`, `/bin`, `/sbin`, `/lib`, `/proc`, `/sys`, `/dev`, `/opt`, `/mnt`, `/srv` и др.), пути Windows-дисков с прямым и обратным слешем (`C:/...`, `C:\...`) и сетевые UNC-пути (`\\server\share`).
+  - Обеспечена сохранность стандартных веб-ссылок (`https://...`, `http://...`) и MIME-типов (`application/json`) без ложных срабатываний.
+- **Тесты регрессии**: в `test/domain.test.mjs` добавлен сьют тестов, проверяющий каждый формат из требований безопасности.
+- **Дизайн-контракт**: правила десенсибилизации зафиксированы в `docs/design/DESIGN.md`.
+
+### 中文
+- **强化凭据与文件系统路径脱敏机制 (#80)**：全面强化 `lib/domain.js` 中 `redactText` 的过滤规则，杜绝公开 Issue 正文、宿主会话日志及 AI 提示词中的敏感信息泄露。
+  - 支持无左词边界后缀匹配，全面脱敏复合凭证键名：`access_token=`、`refresh_token:`、`client_secret=`、`api_key=`、`secret_key=`、`auth_token=`。
+  - 新增对小驼峰命名（camelCase）凭证字段的识别与脱敏（`accessToken:`、`refreshToken:`、`clientSecret:`、`apiKey:`、`userPassword:`）。
+  - 新增对 HTTP `Authorization: Basic` 及 `Authorization: Basic <base64>` 凭证头的脱敏支持。
+  - 文件系统路径脱敏扩展至所有标准 POSIX 根目录（`/etc`、`/var`、`/tmp`、`/root`、`/usr`、`/bin`、`/sbin`、`/lib`、`/proc`、`/sys`、`/dev`、`/opt`、`/mnt`、`/srv` 等）、正反斜杠格式的 Windows 驱动器路径（`C:/...`、`C:\...`）以及 Windows UNC 共享路径（`\\server\share`）。
+  - 严格保持标准 Web URL（`https://...`、`http://...`）与 MIME 类型（`application/json`）的完整性，杜绝误伤。
+- **回归与安全测试**：在 `test/domain.test.mjs` 中添加专项单元测试，覆盖所有凭证与路径格式。
+- **设计契约**：在 `docs/design/DESIGN.md` 中更新了脱敏安全规范。
+
 ## 0.1.11
 
 ### English
