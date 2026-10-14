@@ -105,10 +105,13 @@ test('apply integrates with DSH 0.2 settings service without register and respon
   assert.equal(config.timeoutMs, 50000)
   assert.equal(config.ghPath, '/usr/local/bin/gh')
 
-  // Test config event live update
-  const configHandler = listeners.get('config')
-  assert.ok(typeof configHandler === 'function', 'config listener must be registered')
-  configHandler({ giteaBaseUrl: 'https://gitea.example.com' })
+  // #93 — verify dead config event listener is removed
+  assert.equal(listeners.has('config'), false, 'dead config listener must not be registered')
+
+  // #93 — test settings/document-updated live update
+  const docHandler = listeners.get('settings/document-updated')
+  assert.ok(typeof docHandler === 'function', 'settings/document-updated listener must be registered')
+  docHandler({ giteaBaseUrl: 'https://gitea.example.com' })
   assert.equal(config.giteaBaseUrl, 'https://gitea.example.com')
 })
 
