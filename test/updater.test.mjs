@@ -82,3 +82,14 @@ test('fixtures and sources do not contain internal LAN IPs or development paths'
     }
   }
 })
+test('#93 — plugin-updater does not disable pnpm release-age guard', async () => {
+  const fs = await import('node:fs/promises')
+  const path = await import('node:path')
+  const filePath = path.resolve(new URL('../lib/plugin-updater.js', import.meta.url).pathname)
+  const source = await fs.readFile(filePath, 'utf-8')
+  assert.equal(
+    source.includes('minimumReleaseAge'),
+    false,
+    'plugin-updater must not pass --config.minimumReleaseAge flag',
+  )
+})
