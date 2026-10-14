@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.1.14
+
+### English
+- **Supply-Chain Security Guard Restoration (#93)**:
+  - Removed `--config.minimumReleaseAge=0` argument from `spawn` execution in `lib/plugin-updater.js`, ensuring pnpm's default release-age verification remains enforced during plugin auto-updates.
+- **Dead Event Subscriptions & Fallback Clean-up (#93)**:
+  - Eliminated unused `config` event listeners (`ctx.on('config')` and `ctx.off('config')`) in `lib/index.js` `bindEvents`.
+  - Simplified `settingsSvc` assignment in `lib/index.js` `ctx.inject(['settings'], ...)`, removing the redundant `sctx.get('settings')` fallback.
+- **Testing & Design Contract**:
+  - Added regression test verifying absence of `--config.minimumReleaseAge` in `test/updater.test.mjs`.
+  - Updated `test/settings.test.mjs` to assert absence of `config` listener and verify `settings/document-updated`.
+  - Updated design contract in `docs/design/DESIGN.md`.
+
+### Русский
+- **Восстановление защиты supply-chain в апдейтере (#93)**:
+  - Удалён аргумент `--config.minimumReleaseAge=0` при вызове `spawn` в `lib/plugin-updater.js`, восстановив штатную проверку возраста релиза в pnpm при автоматических обновлениях плагина.
+- **Очистка мёртвых подписок на события и избыточных фоллбеков (#93)**:
+  - Удалены неиспользуемые слушатели события `config` (`ctx.on('config')` и `ctx.off('config')`) в `bindEvents` (`lib/index.js`).
+  - Упрощено присваивание `settingsSvc` в `lib/index.js` (`ctx.inject(['settings'], ...)`), удалён мёртвый fallback `sctx.get('settings')`.
+- **Тесты и дизайн-контракт**:
+  - Добавлен тест регрессии в `test/updater.test.mjs`, проверяющий отсутствие флага `minimumReleaseAge`.
+  - Обновлён `test/settings.test.mjs` с проверкой отсутствия слушателя `config` и тестом `settings/document-updated`.
+  - Синхронизирован дизайн-документ `docs/design/DESIGN.md`.
+
+### 中文
+- **恢复更新器供应链安全防护 (#93)**：
+  - 在 `lib/plugin-updater.js` 的 `spawn` 执行参数中移除 `--config.minimumReleaseAge=0`，确保插件自动更新时完整保留 pnpm 默认的版本发布时间窗口安全防护机制。
+- **清理无用事件监听与冗余回退 (#93)**：
+  - 在 `lib/index.js` 的 `bindEvents` 中移除未触发的 `config` 事件监听器（`ctx.on('config')` 和 `ctx.off('config')`）。
+  - 简化 `lib/index.js` 中 `ctx.inject(['settings'], ...)` 的 `settingsSvc` 赋值，移除冗余的 `sctx.get('settings')` 回退逻辑。
+- **测试与设计契约**：
+  - 在 `test/updater.test.mjs` 中增加回归测试，验证更新器中不存在 `minimumReleaseAge` 参数。
+  - 在 `test/settings.test.mjs` 中增加断言确认 `config` 监听已移除，并验证 `settings/document-updated` 响应。
+  - 同步更新 `docs/design/DESIGN.md` 设计规范。
+
 ## 0.1.13
 
 ### English
