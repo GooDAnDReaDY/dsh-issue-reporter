@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.18
+
+### Added
+- **AI Root-Cause Attribution & Failure Categorization (#99)**:
+  - Added `classifyRootCause` heuristically matching stack traces and logs against known DSH failure modes: deprecated `settings.register`, React hook collisions, missing modules (`ENOENT`), permission issues (`EACCES`), and port collisions (`ECONNREFUSED`).
+  - Automatically enriches `/dsh-issue-reporter/ai/optimize` payload with identified failure classification and confidence score.
+- **Bilingual Report Generator EN + ZH (#100)**:
+  - Added `generateBilingualReport` creating clean parallel English and Chinese sections for upstream DSH core maintainers.
+  - Added `includeChinese` toggle in issue form with strict privacy redaction across both language blocks.
+- **Minimal Reproducible Example (MRE) Generator (#101)**:
+  - Added `generateMreScript` producing standalone runnable Node.js reproduction scripts from route signatures, HTTP methods, and sanitized error payloads.
+  - Added `POST /dsh-issue-reporter/mre` endpoint and client action to insert MRE scripts directly into issue drafts.
+- **Agent Tool Execution Replayer (#130)**:
+  - Added `AgentReplayer` keeping a 10-call circular ring buffer of agent tool calls with sanitized arguments and duration metrics.
+  - Added `GET /dsh-issue-reporter/agent-replay` endpoint and client action to attach recent tool interactions to bug reports.
+
 ## 0.1.17
 
 ### English
