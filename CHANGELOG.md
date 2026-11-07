@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.1.21
+
+### Added
+- **Issue-to-Fix Worktree Automation (#106)**:
+  - Added `lib/issue-to-fix.js` preparing isolated git worktree environments (`fix/issue-<num>-<plugin>`) and agent execution instruction files (`task-<num>.json`).
+  - Added `POST /dsh-issue-reporter/issue-to-fix` endpoint and "+ Fix with Agent" client action.
+- **Auto-Generated Canary Regression Test (#113)**:
+  - Added `lib/canary-test-generator.js` generating self-contained Node.js tests (`test/canary-repro.test.mjs`) using `node:test` and `node:assert/strict`.
+  - Added `POST /dsh-issue-reporter/canary-test` endpoint and "+ Canary test" client action.
+- **Safe Mode & Panic Button (#115)**:
+  - Added `lib/safe-mode.js` providing one-click emergency deactivation of malfunctioning plugins from `dsh.profile.bundles`.
+  - Added `POST /dsh-issue-reporter/safe-mode/disable` endpoint and "[!] Panic: Disable" client button.
+- **Private Security Advisory Mode (#116)**:
+  - Added `lib/security-advisory.js` heuristically detecting RCE, command injection, path traversal, and cloud credential exposure.
+  - Resolves confidential disclosure channels (GHSA / security contact email) to prevent public 0-day leaks.
+  - Added `POST /dsh-issue-reporter/security-advisory` endpoint.
+- **Headless CLI Bug Reporter (#131)**:
+  - Added executable CLI `bin/dsh-report.js` with flags `--plugin`, `--title`, `--observed`, `--expected`, `--dry-run`, `--json`.
+  - Configured `"bin": { "dsh-report": "./bin/dsh-report.js" }` in `package.json`.
+- **Git Patch Generator (#132)**:
+  - Added `lib/git-patch.js` parsing and sanitizing unified git diffs from uncommitted local modifications.
+  - Added `GET /dsh-issue-reporter/git-patch` endpoint and "+ Git patch" client action.
+
 ## 0.1.20
 
 ### Added

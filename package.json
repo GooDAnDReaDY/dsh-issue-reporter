@@ -1,6 +1,6 @@
 {
   "name": "@goodandready/dsh-issue-reporter",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Preview and submit actionable GitHub bug reports from DeepSeek Harness",
   "license": "MIT",
   "type": "module",
@@ -15,6 +15,7 @@
   },
   "files": [
     "lib/",
+    "bin/",
     "cordis.patch.yml",
     "README.md",
     "README.zh.md",
@@ -49,5 +50,8 @@
   "homepage": "https://github.com/GooDAnDReaDY/dsh-issue-reporter#readme",
   "bugs": {
     "url": "https://github.com/GooDAnDReaDY/dsh-issue-reporter/issues"
+  },
+  "bin": {
+    "dsh-report": "./bin/dsh-report.js"
   }
 }
