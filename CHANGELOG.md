@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.23
+
+### Added
+- **Status Pulse & Maintainer Reply Monitoring (#107)**:
+  - Added `lib/status-pulse.js` with `StatusPulseTracker` and `detectTicketChanges` monitoring tracked issues for author replies, reopens, and closures.
+  - Added `/dsh-issue-reporter/pulse/status`, `/dsh-issue-reporter/pulse/track`, and `/dsh-issue-reporter/pulse/check` endpoints.
+  - Client UI displays active alerts and allows quick status synchronization.
+- **1-Click Update upon Fix (#108)**:
+  - Added `lib/fix-updater.js` with `detectFixAvailable` and `compareSemver` connecting resolved issues directly to package update cycles.
+  - Added `/dsh-issue-reporter/fix-update/check` endpoint and 1-click update action in the issue form.
+- **Webhook Dispatcher (#121)**:
+  - Added `lib/webhooks.js` with `dispatchWebhook` formatting defect embeds for Telegram, Discord, Slack, and Mattermost.
+  - Strict SSRF protection disallowing loopback, internal LAN IP addresses, and cloud metadata targets.
+  - Added `/dsh-issue-reporter/webhooks/dispatch` endpoint and optional dispatch hook upon issue creation.
+- **Gitea & GitHub Project Board Integration (#123)**:
+  - Added `lib/project-boards.js` with `resolveProjectPlacement` and `matchTargetColumn` automatically routing new issues to triage columns ("Needs Triage", "Inbox", "To Do").
+  - Added `/dsh-issue-reporter/projects/placement` endpoint and "+ Kanban" button.
+
 ## 0.1.22
 
 ### Added

@@ -204,6 +204,11 @@ dsh-issue-reporter:
 | `POST /dsh-issue-reporter/draft` | Генерация очищенного от конфиденциальных данных черновика | Нет |
 | `POST /dsh-issue-reporter/duplicates` | Поиск и ранжирование похожих issue | Read-only GitHub |
 | `POST /dsh-issue-reporter/create` | Создание подтверждённого issue через REST API или `gh` | GitHub Issue |
+| `GET /dsh-issue-reporter/pulse/status` | Список отслеживаемых тикетов и активных алертов | Нет |
+| `POST /dsh-issue-reporter/pulse/check` | Фоновый опрос ответов авторов и изменений состояния | Внешний API |
+| `POST /dsh-issue-reporter/fix-update/check` | Проверка доступности фикса в npm при закрытии тикета | Нет |
+| `POST /dsh-issue-reporter/webhooks/dispatch` | Отправка отчета в Telegram, Discord, Slack, Mattermost | Входящий вебхук |
+| `POST /dsh-issue-reporter/projects/placement` | Размещение тикета в колонке канбан-доски (Needs Triage/Inbox) | Внешний API |
 
 ---
 

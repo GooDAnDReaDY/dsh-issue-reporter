@@ -220,6 +220,11 @@ All routes enforce DSH browser session authentication and same-origin protection
 | `POST /dsh-issue-reporter/draft` | Compose a sanitized draft with redaction summary | No |
 | `POST /dsh-issue-reporter/duplicates` | Search and rank likely duplicate issues | Read-only GitHub |
 | `POST /dsh-issue-reporter/create` | Submit confirmed issue via REST API or `gh --attach` | GitHub Issue |
+| `GET /dsh-issue-reporter/pulse/status` | List tracked tickets and active status pulse alerts | No |
+| `POST /dsh-issue-reporter/pulse/check` | Trigger status polling for maintainer replies | External API |
+| `POST /dsh-issue-reporter/fix-update/check` | Check if published fix release exists for resolved ticket | No |
+| `POST /dsh-issue-reporter/webhooks/dispatch` | Send sanitized report to Telegram, Discord, Slack, Mattermost | External Webhook |
+| `POST /dsh-issue-reporter/projects/placement` | Resolve Kanban board triage column placement | External API |
 
 ---
 
