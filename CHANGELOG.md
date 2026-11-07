@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.1.20
+
+### Added
+- **Memory & Event-Loop Lag Profiler (#112)**:
+  - Added `lib/event-loop-profiler.js` measuring Event Loop delay via `perf_hooks.monitorEventLoopDelay` and heap delta via `process.memoryUsage()`.
+  - Added `GET /dsh-issue-reporter/perf-profile` endpoint returning P50/P90/P99 latency, heap memory footprint, and thread stall warnings.
+  - Added "+ Insert perf profile" button in the Report Editor.
+- **Multi-Error Aggregator (#120)**:
+  - Added `lib/error-aggregator.js` computing normalized stack trace hashes (`sha256`) to group repeating runtime exceptions.
+  - Tracks reproducibility count, first/last seen timestamps, and embeds reproducibility window summaries into error reports.
+  - Added `GET /dsh-issue-reporter/error-aggregation` endpoint.
+- **Boot Time & Cold Start Profiler (#128)**:
+  - Added `lib/boot-profiler.js` recording synchronization and asynchronous durations during plugin initialization phases.
+  - Detects cold-start blockers exceeding the 800ms threshold caused by heavy sync I/O or dynamic imports.
+  - Added `GET /dsh-issue-reporter/boot-profile` endpoint.
+- **Local Storage & DB Schema Snapshotter (#129)**:
+  - Added `lib/storage-snapshotter.js` safely inspecting plugin persistent directories (`~/.dsh/data/<plugin>`).
+  - Reports database file sizes, table structures, and migration status without reading or leaking row data.
+  - Added `GET /dsh-issue-reporter/storage-snapshot` endpoint and "+ Inspect storage" client action.
+- **OS Permissions & Environment Verifier (#133)**:
+  - Added `lib/env-verifier.js` probing filesystem write permissions for cache, log, socket, and tmp paths (`EACCES`/`EPERM`).
+  - Tests TCP port availability (`EADDRINUSE`), detects container contexts (Docker/LXC), and verifies execution privileges (UID).
+  - Added `GET /dsh-issue-reporter/env-verify` endpoint and "+ Verify OS environment" client action.
+
 ## 0.1.19
 
 ### Added
