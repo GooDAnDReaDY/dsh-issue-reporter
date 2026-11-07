@@ -1,5 +1,58 @@
 # Changelog
 
+## 0.1.16
+
+### English
+- **Client-Side Secret & Token Pre-Flight Redaction**:
+  - Implemented `redactClientText` in client runtime matching server redactions for GitHub tokens, API keys, bearer credentials, local paths, emails, and private LAN IPs.
+  - Hardened `CrashWatcher` and `ErrorBoundary` to cleanse error messages and stack traces at the source before rendering, copying to clipboard, or drafting bug reports.
+  - Sanitized runtime error notifications in settings card to eliminate credential or token leakage.
+- **Action Trail Privacy & Password Protection**:
+  - Excluded password fields (`input[type="password"]` and `[data-sensitive="true"]`) from action trail interaction tracking.
+  - Sanitized element labels and button text through `redactClientText` before buffering.
+- **SSRF Protocol Restriction**:
+  - Enforced strict HTTP and HTTPS protocol whitelist in `parseForgeRepository`, rejecting `file:`, `javascript:`, `ftp:`, and non-routable pseudo-protocols.
+- **Dead Export & Lifecycle Hardening**:
+  - Integrated `getMetadataCache` size into live `/dsh-issue-reporter/status` diagnostic payload (`metadataCacheEntries`).
+  - Flush `_clearIssueStatusCache` on device logout to avoid stale cache across sessions.
+  - Normalized all catch bindings across `lib/` and `src/client/` modules with explicit error variables.
+- **Verification**:
+  - Added test suite `test/security-audit-v0116.test.mjs` verifying protocol validation, client redaction, and cache lifecycle (77 passing tests).
+
+### Русский
+- **Клиентская защита от утечек токенов и секретов**:
+  - Реализована функция `redactClientText` в клиентской части плагина, маскирующая GitHub-токены, API-ключи, Bearer-учётные данные, локальные пути, email и приватные LAN IP.
+  - `CrashWatcher` и `ErrorBoundary` теперь фильтруют текст ошибки и трейс стека на месте — до отображения, копирования в буфер обмена или формирования репорта.
+  - Баннер перехвата сбоев в карточке настроек очищает все чувствительные данные.
+- **Защита паролей и приватности в Action Trail**:
+  - Добавлено безусловное исключение полей ввода паролей (`input[type="password"]` и `[data-sensitive="true"]`) из отслеживания действий.
+  - Все подписи кнопок и элементов перед записью в кольцевой буфер проходят через `redactClientText`.
+- **Защита от SSRF и валидация протоколов**:
+  - В `parseForgeRepository` внедрена строгая валидация протокола: разрешены только HTTP и HTTPS; `file:`, `javascript:`, `ftp:` и относительные псевдо-протоколы блокируются.
+- **Очистка неиспользуемых экспортов и жизненный цикл**:
+  - `getMetadataCache` подключён к рабочему эндпоинту `/dsh-issue-reporter/status` (`metadataCacheEntries`).
+  - Сброс кэша статусов `_clearIssueStatusCache` вызывается при выходе из аккаунта (`/device/logout`).
+  - Все `catch`-блоки в `lib/` и `src/client/` приведены к единому стандарту с явным объявлением ошибок.
+- **Проверка и тесты**:
+  - Создан тестовый сьют `test/security-audit-v0116.test.mjs` с проверкой безопасности протоколов, клиентской санитизации и кэша (всего 77 тестов успешно проходят).
+
+### 中文
+- **前端敏感令牌与凭证预过滤保护**：
+  - 在前端运行时实现 `redactClientText`，严格匹配后端脱敏规则，自动遮蔽 GitHub 令牌、API 密钥、Bearer 凭据、本地文件路径、邮箱与内网 IP。
+  - 加固 `CrashWatcher` 与 `ErrorBoundary`，在渲染、复制到剪贴板或生成 Issue 之前对错误信息及调用栈进行源头清洗。
+  - 清理设置卡片中的异常横幅数据，彻底杜绝令牌外泄。
+- **操作轨迹隐私与密码字段防护**：
+  - 在操作轨迹捕获中排斥密码输入框（`input[type="password"]` 与 `[data-sensitive="true"]`）。
+  - 所有控件标签与按钮文案在写入环形队列前均执行 `redactClientText` 过滤。
+- **SSRF 协议限制与地址安全**：
+  - 在 `parseForgeRepository` 中强制仅允许 HTTP 与 HTTPS 协议，禁止 `file:`、`javascript:`、`ftp:` 等协议。
+- **死代码导出清理与缓存生命周期**：
+  - 将 `getMetadataCache` 接入 `/dsh-issue-reporter/status` 诊断接口返回（`metadataCacheEntries`）。
+  - 在注销接口 `/device/logout` 中自动清空 Issue 状态缓存 `_clearIssueStatusCache`。
+  - 规范化 `lib/` 与 `src/client/` 中的所有异常捕获语法。
+- **验证与测试**：
+  - 新增 `test/security-audit-v0116.test.mjs` 测试套件，覆盖协议校验、前端脱敏与缓存更新机制（全套 77 个测试全部通过）。
+
 ## 0.1.15
 
 ### English
