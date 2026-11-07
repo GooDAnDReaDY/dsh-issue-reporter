@@ -1,5 +1,54 @@
 # Changelog
 
+## 0.1.17
+
+### English
+- **Conflict Detector (#98)**:
+  - Added route collision detection across registered HTTP endpoints, detecting overlapping paths and method shadowing between plugins.
+  - Added Cordis service provider collision detection flagging multiple plugins implementing identical singleton service names.
+  - Added UI Slot collision detection identifying competing microfrontend widgets.
+  - Introduced `GET /dsh-issue-reporter/conflicts` endpoint and cross-plugin conflict Markdown report formatter linking competing repositories.
+  - Added optional `conflictingPlugin` selector in Report Editor to file cross-plugin collision reports.
+- **Network & Route Harvester (#111)**:
+  - Passive 10-event ring buffer capturing client HTTP 4xx/5xx failures, network errors, timeouts, and CORS errors.
+  - Automated redaction of sensitive query params (`token`, `access_token`, `secret`, `key`), headers (`Authorization`, `Cookie`, `x-token`), and request/response payloads.
+  - Safe reproduction `curl` command generation with sanitized parameters.
+  - 1-click "Insert network failure (curl)" button in Report Editor reproduction steps.
+- **Config Schema Drift & Corruption Linter (#126)**:
+  - Automated validation of plugin settings against declared JSON / Schemastery schemas.
+  - Detects syntax corruption, type mismatches (e.g. string vs number), missing required fields, and obsolete configuration keys remaining after plugin updates.
+  - Generates sanitized visual diff Markdown report with secret redactions via `GET /dsh-issue-reporter/config-lint`.
+  - 1-click "Lint plugin settings" button in Report Editor environment section.
+- **Pnpm Multi-Instance & Hook Conflict Auditor (#127)**:
+  - Scans profile dependency tree for duplicate singleton libraries (`react`, `react-dom`, `@cordisjs/core`, `cordis`).
+  - Detects duplicate React copies that trigger fatal `"Invalid hook call"` microfrontend errors.
+  - Provides diagnostic endpoint `GET /dsh-issue-reporter/dependency-audit` and actionable developer remediation recommendations (`pnpm dedupe`, peer dependency alignment).
+  - Diagnostic metrics surfaced in `/dsh-issue-reporter/status` (`detectedConflicts`, `hookConflictRisk`).
+
+### Русский
+- **Conflict Detector (#98) — Детекция коллизий между плагинами**:
+  - Обнаружение конфликтов маршрутов `webServer`: детекция дублирующихся HTTP-эндпоинтов и затенения методов между различными плагинами.
+  - Детекция коллизий служб Cordis: выявление попыток регистрации одной службы несколькими плагинами-провайдерами.
+  - Детекция конфликтов UI-слотов микрофронтендов.
+  - Эндпоинт `GET /dsh-issue-reporter/conflicts` и генератор кросс-плагинного Markdown-отчета со ссылками на оба репозитория.
+  - Поддержка выбора конфликтующего плагина в форме репорта для кросс-модульных дефектов.
+- **Network & Route Harvester (#111) — Перехват сетевых сбоев роутов**:
+  - Пассивный кольцевой буфер на 10 событий для фиксации сетевых сбоев 4xx/5xx, CORS и таймаутов клиентских запросов.
+  - Автоматическая санитизация токенов и паролей в URL, заголовках (`Authorization`, `Cookie`) и телах запросов/ответов.
+  - Генерация готовой безопасной команды `curl` для быстрой воспроизводимости разработчиками.
+  - Кнопка «Вставить сетевой сбой (curl)» в шагах воспроизведения редактора репортов.
+- **Config Schema Drift & Corruption Linter (#126) — Линтер схемы конфигурации**:
+  - Валидация файла настроек плагина против его объявленной схемы (Schemastery / JSON Schema).
+  - Выявление несоответствий типов (строка вместо числа), отсутствующих обязательных ключей и устаревших параметров после обновлений.
+  - Форматированный визуальный diff с санитизацией секретов через эндпоинт `GET /dsh-issue-reporter/config-lint`.
+  - Кнопка «Сверить настройки плагина» в секции окружения редактора.
+- **Pnpm Multi-Instance Auditor (#127) — Аудитор задвоения зависимостей**:
+  - Сканирование дерева зависимостей профиля на наличие дубликатов синглтонов (`react`, `react-dom`, `@cordisjs/core`).
+  - Выявление изолированных копий React, вызывающих критическую ошибку `Invalid hook call` в слотах микрофронтендов.
+  - Эндпоинт `GET /dsh-issue-reporter/dependency-audit` с практическими рекомендациями по устранению (`pnpm dedupe`, peerDependencies).
+  - Интеграция метрик коллизий и риска хуков в диагностический эндпоинт `/status`.
+
+
 ## 0.1.16
 
 ### English
