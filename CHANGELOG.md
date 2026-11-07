@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.19
+
+### Added
+- **Real-time Duplicate Issue Radar (#102)**:
+  - Added debounced live search querying `/dsh-issue-reporter/duplicates` as user enters issue titles.
+  - Interactive radar alert bar under the title input surfacing similar tickets with live state badges and direct links.
+- **Issue Templates & Defect Presets (#103)**:
+  - Added `lib/templates.js` defining standard report skeletons: *Startup Crash*, *UI & Styling Glitch*, *DSH 0.2 / Cordis Incompatibility*, and *Performance & Resource Leak*.
+  - Template dropdown selector automatically pre-populates structured questions, expected behaviors, and suggested labels.
+  - Added `GET /dsh-issue-reporter/templates` endpoint and draft autosave to `sessionStorage`.
+- **Preflight Quality Gate Readiness Meter (#109)**:
+  - Added `lib/quality-gate.js` evaluating completeness score (0–100%) across title, observed behavior, expected behavior, reproduction steps, and diagnostic attachments.
+  - Added `POST /dsh-issue-reporter/quality-gate` endpoint and visual readiness gauge with soft guidance warnings.
+- **Interactive Redaction Diff Inspector (#117)**:
+  - Enhanced `redactText` to return full audit records of masked tokens, passwords, LAN IPs, absolute paths, and emails.
+  - Added `auditRedactions` and `POST /dsh-issue-reporter/redaction-audit` endpoint.
+  - Added interactive collapsible audit viewer in Preview tab showing category-level protection summaries before submission.
+
 ## 0.1.18
 
 ### Added
