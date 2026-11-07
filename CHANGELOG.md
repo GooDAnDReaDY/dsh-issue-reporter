@@ -1,5 +1,61 @@
 # Changelog
 
+## 0.1.15
+
+### English
+- **Environment Health Snapshot (#97)**:
+  - Added `getEnvironmentSnapshot` and `formatEnvironmentMarkdown` in `lib/domain.js` capturing DSH core version, Node.js version, platform, architecture, OS release, active profile, process uptime, and memory usage (RSS / Heap).
+  - Registered `GET /dsh-issue-reporter/environment` route and enriched `/dsh-issue-reporter/status` diagnostics.
+  - Enhanced `composeIssueDraft` to automatically format and embed environment snapshots into bug reports.
+- **1-Click Crash-to-Issue Interception (#96)**:
+  - Implemented `CrashWatcher` in client listening for `window.error` and `unhandledrejection` events.
+  - Added in-place notification banner with a "1-Click Bug Report" action pre-filling error message, stack trace, target plugin, and diagnostic snapshot.
+- **User Action Trail Ring Buffer (#110)**:
+  - Implemented passive, privacy-safe 15-event in-memory ring buffer tracking interactive clicks and navigation without recording form text, keystrokes, or passwords.
+  - Added 1-click action trail insertion into reproduction steps with relative timestamp offsets.
+- **Native React Error Boundary Injection (#125)**:
+  - Upgraded client `ErrorBoundary` into a graceful recovery card trapping render crashes to prevent white-screen failures.
+  - Provided in-place controls: "Copy Stack", "Report Issue", and "Retry" remounting.
+- **Documentation & Verification**:
+  - Added comprehensive test suite `test/diagnostics-release-1.test.mjs` (74 passing tests total).
+  - Updated English, Russian, and Chinese documentation in `README.md`, `README.ru.md`, `README.zh.md`, and `docs/design/DESIGN.md`.
+
+### Русский
+- **Снимок здоровья окружения (#97)**:
+  - Реализованы функции `getEnvironmentSnapshot` и `formatEnvironmentMarkdown` в `lib/domain.js` для сбора версии ядра DSH, Node.js, платформы, архитектуры, релиза ОС, имени профиля, времени работы и метрик памяти (RSS / Heap).
+  - Добавлен серверный маршрут `GET /dsh-issue-reporter/environment` и расширен ответ `/dsh-issue-reporter/status`.
+  - `composeIssueDraft` теперь автоматически форматирует и встраивает срез окружения в тело тикета.
+- **Перехват сбоев 1-Click Crash-to-Issue (#96)**:
+  - Реализован `CrashWatcher` на клиенте для перехвата необработанных сбоев `window.error` и `unhandledrejection`.
+  - Добавлен нативный баннер «Crash detected» с кнопкой «1-Click Bug Report», предзаполняющий форму репорта ошибкой, трейсом, плагином и срезом системы.
+- **Кольцевой буфер действий пользователя (#110)**:
+  - Создан защищенный ring-buffer на 15 событий взаимодействия пользователя без сбора вводимых текстов, паролей или токенов.
+  - Добавлена кнопка быстрой вставки истории действий в шаги воспроизведения с относительными таймингами.
+- **Нативный React Error Boundary (#125)**:
+  - Компонент `ErrorBoundary` расширен до карточки восстановления, предотвращающей падение всего интерфейса в белый экран.
+  - Предоставлены кнопки: «Копировать стек», «Создать багрепорт» и «Повторить».
+- **Документация и тесты**:
+  - Добавлен набор тестов `test/diagnostics-release-1.test.mjs` (всего 74 теста проходят успешно).
+  - Обновлены описания в `README.md`, `README.ru.md`, `README.zh.md` и `docs/design/DESIGN.md`.
+
+### 中文
+- **运行环境健康快照 (#97)**：
+  - 在 `lib/domain.js` 中新增 `getEnvironmentSnapshot` 与 `formatEnvironmentMarkdown`，采集 DSH 核心版本、Node.js 版本、系统架构、发行版、当前配置方案及内存占用。
+  - 注册 `GET /dsh-issue-reporter/environment` 路由并在 `/status` 中返回丰富的系统健康指标。
+  - `composeIssueDraft` 支持自动解析并向 Issue 草稿追加环境诊断信息。
+- **一键崩溃上报拦截器 (#96)**：
+  - 在前端实现 `CrashWatcher` 监听全局运行时异常和未捕获的 Promise 拒绝。
+  - 弹出顶部快捷上报横幅，一键自动填充错误信息、调用栈、关联插件与系统快照。
+- **用户操作轨迹环形缓冲区 (#110)**：
+  - 构建轻量安全的 15 条操作历史环形队列，仅记录安全交互控件类型与标签，绝不采集表单输入文本、密码与密钥。
+  - 支持一键插入带相对时间戳的复现步骤。
+- **原生 React Error Boundary 保护 (#125)**：
+  - 将前端 `ErrorBoundary` 升级为具备自我恢复能力的容错卡片，彻底杜绝白屏问题。
+  - 提供“复制堆栈”、“反馈异常”与“重试”操作按钮。
+- **文档与测试**：
+  - 新增专用单元测试套件 `test/diagnostics-release-1.test.mjs`（共 74 项测试全部通过）。
+  - 同步更新英文、俄文与中文文档及 `docs/design/DESIGN.md` 设计契约。
+
 ## 0.1.14
 
 ### English

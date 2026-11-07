@@ -110,6 +110,15 @@ Queries upstream repository labels via `POST /dsh-issue-reporter/labels` and aut
 ### 10. One-Click Settings Card Updater
 In-place npm updater conforming to DSH standards: checks the registry on mount and provides an explicit "Update" button with same-origin and loopback security.
 
+### 11. 1-Click Crash-to-Issue & Native React Error Boundary
+Intercepts uncaught browser runtime errors and unhandled promise rejections, displaying an immediate 1-click bug report notification banner. Includes a native React Error Boundary wrapping UI slots to prevent the white-screen-of-death, showing an in-place recovery card with "Copy Stack", "Report Issue", and "Retry" options.
+
+### 12. User Action Trail
+Maintains a lightweight, privacy-safe 15-event in-memory ring buffer of recent user interactions (`button`, `link`, `tab`, `summary`), auto-insertable into reproduction steps with relative timestamp offsets (`[-3s] button: Save`) without recording sensitive form input contents, keystrokes, or passwords.
+
+### 13. Environment Health Snapshot
+Automatically queries host runtime diagnostics via `GET /dsh-issue-reporter/environment` (DSH version, Node.js version, OS release, platform, active profile, and process memory footprint), auto-formatted into Markdown without host secret leakage.
+
 ### 4. Read-Only Duplicate Search
 Before submission, the plugin searches existing GitHub issues in the target repository using normalized tokens from the title and body. It ranks up to five potential duplicates to avoid noise.
 

@@ -182,6 +182,15 @@ dsh-issue-reporter:
 
 ---
 
+### 11. 一键崩溃反馈与 React Error Boundary 保护
+拦截未处理的前端运行时异常和 Promise 拒绝，弹出醒目的一键错误上报横幅。集成原生 React Error Boundary 防止整个 WebUI 发生白屏崩溃，并在故障组件位置呈现隔离的恢复卡片，支持“复制堆栈”、“反馈异常”与“重试”。
+
+### 12. 用户操作轨迹 (User Action Trail)
+在内存中维护轻量级 15 条操作事件环形缓冲区（`button`、`link`、`tab`、`summary`），自动插入复现步骤并标注相对时间差（如 `[-3s] button: Save`），绝不采集表单输入文本、密码或隐私密钥。
+
+### 13. 运行环境健康快照 (Environment Health Snapshot)
+通过 `GET /dsh-issue-reporter/environment` 自动聚合运行时诊断（DSH 核心版本、Node.js 版本、操作系统发行版、当前 Profile 和内存占用指标），安全格式化为 Markdown 报告。
+
 ## 🔌 HTTP API 路由
 
 所有接口均受 DSH 身份校验及同源安全策略保护。
