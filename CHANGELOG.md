@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.24
+
+### Added
+- **Plugin Health Watchdog (#118)**:
+  - Added `lib/health-watchdog.js` providing sliding-window incident aggregation and stability scoring (0-100).
+  - Categorizes installed plugins into badges: 🟢 Stable, 🟡 Warning, 🔴 High crash rate.
+  - Added `GET / POST /dsh-issue-reporter/health/watchdog` endpoints and "+ Health" action in the issue form.
+- **Subagent Bug Delegator (#122)**:
+  - Added `lib/subagent-delegator.js` implementing autonomous failure delegation to child subagents with stack trace isolation and prompt engineering.
+  - Registered `delegate_issue_investigation` tool in the Cordis `ctx.tools` runtime.
+  - Added `POST /dsh-issue-reporter/subagent/investigate` endpoint and "+ Subagent" action.
+- **Resolved Issue Karma & Changelog Alert (#124)**:
+  - Added `lib/karma-alert.js` delivering positive feedback, karma reward scoring (+50 pts), and changelog highlights when a user's bug report resolves an issue.
+  - Added `GET / POST /dsh-issue-reporter/karma/alerts` endpoints and "+ Karma" celebratory preview.
+
 ## 0.1.23
 
 ### Added

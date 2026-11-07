@@ -225,6 +225,9 @@ All routes enforce DSH browser session authentication and same-origin protection
 | `POST /dsh-issue-reporter/fix-update/check` | Check if published fix release exists for resolved ticket | No |
 | `POST /dsh-issue-reporter/webhooks/dispatch` | Send sanitized report to Telegram, Discord, Slack, Mattermost | External Webhook |
 | `POST /dsh-issue-reporter/projects/placement` | Resolve Kanban board triage column placement | External API |
+| `GET / POST /dsh-issue-reporter/health/watchdog` | Inspect plugin crash frequency and stability score | No |
+| `POST /dsh-issue-reporter/subagent/investigate` | Delegate defect analysis to specialized subagent | Cordis Tool |
+| `GET / POST /dsh-issue-reporter/karma/alerts` | Award bug hunter karma and extract changelog highlights | No |
 
 ---
 

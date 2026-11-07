@@ -209,6 +209,9 @@ dsh-issue-reporter:
 | `POST /dsh-issue-reporter/fix-update/check` | Проверка доступности фикса в npm при закрытии тикета | Нет |
 | `POST /dsh-issue-reporter/webhooks/dispatch` | Отправка отчета в Telegram, Discord, Slack, Mattermost | Входящий вебхук |
 | `POST /dsh-issue-reporter/projects/placement` | Размещение тикета в колонке канбан-доски (Needs Triage/Inbox) | Внешний API |
+| `GET / POST /dsh-issue-reporter/health/watchdog` | Анализ стабильности и аварийности плагинов с бейджами здоровья | Нет |
+| `POST /dsh-issue-reporter/subagent/investigate` | Делегирование расследования сбоя дочернему субагенту | Cordis Tool |
+| `GET / POST /dsh-issue-reporter/karma/alerts` | Начисление кармы за репорт и показ фрагмента чейнджлога | Нет |
 
 ---
 
