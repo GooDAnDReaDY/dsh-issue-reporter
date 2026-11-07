@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.22
+
+### Added
+- **Multi-Forge & GitLab / Codeberg Tracker Support (#104)**:
+  - Added `lib/trackers/multi-forge.js` supporting automated provider detection for GitHub, GitLab (`/api/v4`), Codeberg / Forgejo (`gitea_v1`), and self-hosted instances.
+  - Normalizes issue trackers, API routes, and credential targets based on repository URLs.
+- **Offline Bug Export Bundle (#105)**:
+  - Added `lib/offline-export.js` generating sanitized standalone Markdown reports and JSON metadata bundles for off-platform defect sharing.
+  - Added `POST /dsh-issue-reporter/offline-export` endpoint and "+ Offline export" client action.
+- **Regression Bisection Helper (#114)**:
+  - Added `lib/bisect-helper.js` identifying candidate release windows between known-good versions and broken current versions.
+  - Outputs `git bisect` command recommendations and release ranges.
+  - Added `POST /dsh-issue-reporter/bisect` endpoint and "+ Bisect" client action.
+- **Smart Label & Milestone Auto-Triage (#119)**:
+  - Added `lib/label-triage.js` matching defect categories (crash, ui, performance, security) against available target repository labels.
+  - Added `POST /dsh-issue-reporter/label-triage` endpoint and "+ Triage labels" client action.
+
 ## 0.1.21
 
 ### Added
